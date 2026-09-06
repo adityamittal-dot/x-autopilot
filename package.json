@@ -1,0 +1,15 @@
+{
+  "name": "x-autopilot",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Free, self-hosted build-in-public autopilot for X. GitHub activity -> Gemini -> Buffer.",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "post": "node src/main.js",
+    "dry": "node src/main.js --dry-run",
+    "metrics": "node src/metrics.js",
+    "doctor": "node scripts/doctor.js",
+    "report": "node scripts/report.js"
+  }
+}

@@ -1,0 +1,162 @@
+{
+  "github": {
+    "username": "adityamittal-dot",
+    "excludeRepos": [
+      "dotfiles",
+      "config",
+      "PROJECTS-101"
+    ],
+    "excludeCommitPatterns": [
+      "^merge ",
+      "^merge branch",
+      "^merge pull",
+      "^initial commit$",
+      "^wip$",
+      "^update$",
+      "^updates?$",
+      "^fix$",
+      "^fixes$",
+      "^typo",
+      "^bump ",
+      "^chore\\(deps\\)",
+      "^\\.$",
+      "^test$",
+      "^cleanup$",
+      "^formatting$",
+      "^lint$",
+      "^rename",
+      "^revert "
+    ],
+    "lookbackDays": 7,
+    "minLookbackDays": 3,
+    "maxLookbackDays": 21
+  },
+  "identity": {
+    "stack": [
+      "Django",
+      "Python",
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Tailwind",
+      "PostgreSQL",
+      "Docker",
+      "Node.js"
+    ],
+    "interests": [
+      "static analysis",
+      "developer tools",
+      "code visualization",
+      "full-stack",
+      "web performance",
+      "deploying things"
+    ],
+    "handle": ""
+  },
+  "schedule": {
+    "timezone": "Asia/Calcutta",
+    "postsPerWeek": 3,
+    "publishDelayMinutes": 5,
+    "jitterMinutes": 45
+  },
+  "content": {
+    "pillar": "buildInPublic",
+    "angles": [
+      {
+        "id": "shipped",
+        "weight": 3,
+        "brief": "Something you finished and pushed. Lead with the outcome, not the process."
+      },
+      {
+        "id": "working-on",
+        "weight": 3,
+        "brief": "What you are mid-way through right now. Show the actual problem you are chewing on."
+      },
+      {
+        "id": "learned",
+        "weight": 2,
+        "brief": "One concrete thing this week's code taught you. A gotcha, a pattern, a wrong assumption."
+      },
+      {
+        "id": "problem-solved",
+        "weight": 2,
+        "brief": "A bug or bottleneck you hit and how you got past it. Name the symptom before the fix."
+      },
+      {
+        "id": "new-project",
+        "weight": 2,
+        "brief": "A repo you just started. What it does and why you started it. Only if a new repo appeared."
+      },
+      {
+        "id": "milestone",
+        "weight": 1,
+        "brief": "A number that moved: a release, stars, a feature count, a rewrite finished."
+      }
+    ],
+    "maxChars": 275,
+    "linkPolicy": "inline",
+    "useTrendHook": true
+  },
+  "llm": {
+    "models": [
+      "gemini-3-flash",
+      "gemini-3.1-flash-lite",
+      "gemini-2.5-flash",
+      "gemini-2.0-flash"
+    ],
+    "temperature": 1.0,
+    "variants": 3
+  },
+  "quality": {
+    "maxHashtags": 1,
+    "maxEmoji": 1,
+    "minChars": 80,
+    "similarityThreshold": 0.5,
+    "similarityWindow": 20,
+    "bannedPhrases": [
+      "excited to announce",
+      "thrilled to",
+      "game changer",
+      "game-changing",
+      "in today's fast-paced",
+      "delve",
+      "unleash",
+      "revolutionize",
+      "supercharge",
+      "look no further",
+      "the future of",
+      "let's dive in",
+      "buckle up",
+      "as an ai",
+      "i'm an ai",
+      "here's the thing:",
+      "little did i know",
+      "\ud83d\ude80\ud83d\ude80",
+      "!!!",
+      "#buildinpublic #100daysofcode"
+    ],
+    "bannedOpeners": [
+      "just ",
+      "so ",
+      "today i "
+    ]
+  },
+  "buffer": {
+    "channelService": "twitter",
+    "channelId": ""
+  },
+  "trends": {
+    "enabled": true,
+    "sources": {
+      "hackernews": true,
+      "devto": true,
+      "githubSearch": true
+    },
+    "maxItems": 8
+  },
+  "learning": {
+    "enabled": true,
+    "explorationRate": 0.25,
+    "minSamplesPerAngle": 3
+  }
+}
