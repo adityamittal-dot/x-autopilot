@@ -29,7 +29,8 @@
     ],
     "lookbackDays": 7,
     "minLookbackDays": 3,
-    "maxLookbackDays": 21
+    "maxLookbackDays": 21,
+    "maxRepos": 4
   },
   "identity": {
     "stack": [
