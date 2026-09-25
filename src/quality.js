@@ -18,7 +18,10 @@ export function validate(text, cfg, recent = [], fmt = {}) {
   if (countHashtags(t) > q.maxHashtags) reasons.push('too many hashtags');
   if (countEmoji(t) > q.maxEmoji) reasons.push('too many emoji');
   if (/[{}<>]\s*\w+\s*[{}<>]|\[[A-Z_]{3,}\]|YOUR_|<repo>|TODO/.test(t)) reasons.push('unfilled placeholder');
-  if (/^["'`]|["'`]$/.test(t)) reasons.push('wrapped in quotes');
+  // Only a post the model wrapped whole: same quote at both ends and nowhere else.
+  // A post that opens with a quote or ends in `code` is fine.
+  const q0 = t[0];
+  if (/["'`]/.test(q0) && t.endsWith(q0) && t.split(q0).length === 3) reasons.push('wrapped in quotes');
 
   const low = t.toLowerCase();
   for (const p of q.bannedPhrases) if (low.includes(p.toLowerCase())) reasons.push(`banned phrase: "${p}"`);
