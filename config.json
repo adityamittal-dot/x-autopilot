@@ -56,7 +56,7 @@
       "web performance",
       "deploying things"
     ],
-    "handle": ""
+    "handle": "AdityaMittal87"
   },
   "schedule": {
     "audienceTimezone": "America/New_York",
@@ -171,7 +171,7 @@
         "gemini-3.1-flash-lite",
         "gemini-2.5-flash"
       ],
-      "temperature": 1.0
+      "temperature": 1
     },
     "variants": 3
   },
@@ -215,7 +215,7 @@
   },
   "buffer": {
     "channelService": "twitter",
-    "channelId": ""
+    "channelId": "6aaebf91ea19ca0bde8a0cc1"
   },
   "learning": {
     "enabled": true,
