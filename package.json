@@ -2,6 +2,8 @@
   "name": "x-autopilot",
   "version": "1.0.0",
   "private": true,
+  "license": "MIT",
+  "author": "Aditya Mittal",
   "type": "module",
   "description": "Reach-focused autopilot for X: builder takes on AI and startup news plus build-in-public posts, written by Claude, published via Buffer.",
   "engines": { "node": ">=20" },
