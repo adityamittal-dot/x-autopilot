@@ -45,7 +45,7 @@ export function score(text, cfg, fmt = {}) {
   const len = t.length;
   s += len >= 160 && len <= 265 ? 12 : len >= 110 ? 6 : 0;      // sweet spot
 
-  if (/\b\d+(\.\d+)?\s*(ms|s|kb|mb|x|%|k)\b/i.test(t)) s += 14;  // measured claim
+  if (/\b\d+(\.\d+)?\s*(ms|s|kb|mb|x|%|k)\b|\$\d/i.test(t)) s += 14;  // measured claim or a price
   else if (/\b\d+\b/.test(t)) s += 6;                            // any number
 
   const firstLine = t.split('\n')[0];
@@ -59,14 +59,14 @@ export function score(text, cfg, fmt = {}) {
   if (countEmoji(t) === 0) s += 3;
 
   // concrete technical nouns beat generic ones
-  const concrete = (t.match(/\b(index|query|cache|token|tokens|migration|bundle|hook|route|schema|worker|regex|race|timeout|payload|middleware|cron|socket|build|deploy|type|state|render|model|weights|context|latency|eval|benchmark|agent|api|sdk|inference|fine-tun\w*|open[- ]source|paper)\b/gi) || []).length;
+  const concrete = (t.match(/\b(index|query|cache|token|tokens|migration|bundle|hook|route|schema|worker|regex|race|timeout|payload|middleware|cron|socket|build|deploy|type|state|render|model|weights|context|latency|eval|benchmark|agent|api|sdk|inference|fine-tun\w*|open[- ]source|paper|pricing|margin|margins|revenue|seats|churn|runway|ipo|funding)\b/gi) || []).length;
   s += Math.min(concrete * 4, 12);
 
   const generic = (t.match(/\b(amazing|awesome|incredible|journey|passion|grind|hustle|productivity|leverage|synergy|robust|seamless|powerful)\b/gi) || []).length;
   s -= generic * 8;
 
   if (/\bthoughts\?|\bwho else|\bagree\?|\bdrop a\b/i.test(t)) s -= 15;   // engagement bait
-  if (/\?\s*$/.test(t) && !/\bthoughts\?/i.test(t)) s += 2;             // a real question invites replies
+  if (/\?\s*$/.test(t) && !/\bthoughts\?/i.test(t)) s += 4;             // a real question invites replies (~27x a like)
 
   return s;
 }

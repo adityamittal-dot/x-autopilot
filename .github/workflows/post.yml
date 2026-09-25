@@ -2,18 +2,21 @@ name: post
 
 on:
   schedule:
-    # Times are UTC. Runs early on purpose: GitHub can delay scheduled runs by hours,
-    # so the post is generated in the morning and handed to Buffer with a fixed
-    # publish time (config.json → schedule.publishAt, in the audience's timezone).
-    - cron: '0 6 * * 1-5'    # Mon–Fri: AI/dev news post → goes live 10:00 New York
-    - cron: '30 7 * * 5'     # Friday: weekly recap      → goes live 13:00 New York
+    # Times are UTC. Each run writes every slot that is due (config.json → schedule.slots)
+    # and hands Buffer a fixed publish time, so GitHub's cron delays (often hours) don't
+    # make posts late. A slot opens writeAheadHours before its time; a run that GitHub
+    # drops or delays is caught up by the next one, and a filled slot is never redone.
+    - cron: '45 5 * * 1-5'   # morning slot  → goes live 09:30 New York
+    - cron: '15 9 * * 1-5'   # midday slot   → 13:00 New York (Wed: build-in-public, Fri: weekly recap)
+    - cron: '45 13 * * 1-5'  # evening slot  → 17:30 New York
+    - cron: '45 17 * * 1-5'  # catch-up: fills any slot a dropped run missed
   workflow_dispatch:
     inputs:
       type:
-        description: 'Post type'
+        description: 'auto = fill the slots due now; a type = one post of that type, live in a few minutes'
         type: choice
-        options: [insight, recap]
-        default: insight
+        options: [auto, insight, bip, recap]
+        default: auto
       dry_run:
         description: 'Generate and print without sending to Buffer'
         type: boolean
@@ -47,12 +50,14 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          POST_TYPE: ${{ inputs.type || (github.event.schedule == '30 7 * * 5' && 'recap' || 'insight') }}
+          POST_TYPE: ${{ inputs.type || 'auto' }}
           DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || 'false' }}
         run: node src/main.js
 
+      # always(): if one slot fails, the posts the other slots queued must still be recorded,
+      # or the next run would post them again.
       - name: Commit history
-        if: ${{ github.event_name != 'workflow_dispatch' || !inputs.dry_run }}
+        if: ${{ always() && (github.event_name != 'workflow_dispatch' || !inputs.dry_run) }}
         run: |
           if [ -n "$(git status --porcelain data/)" ]; then
             git config user.name  "x-autopilot"

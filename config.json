@@ -54,16 +54,49 @@
       "full-stack",
       "open source models",
       "web performance",
-      "deploying things"
+      "deploying things",
+      "startups",
+      "founders",
+      "pricing",
+      "SaaS",
+      "AI costs",
+      "unit economics"
     ],
-    "handle": "AdityaMittal87"
+    "handle": "AdityaMittal87",
+    "audience": "Builders on X: developers and technical founders who ship products."
   },
   "schedule": {
     "audienceTimezone": "America/New_York",
-    "publishAt": {
-      "insight": "10:00",
-      "recap": "13:00"
-    },
+    "days": [
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri"
+    ],
+    "slots": [
+      {
+        "id": "morning",
+        "at": "09:30",
+        "type": "insight"
+      },
+      {
+        "id": "midday",
+        "at": "13:00",
+        "type": "insight",
+        "byWeekday": {
+          "Wed": "bip",
+          "Fri": "recap"
+        }
+      },
+      {
+        "id": "evening",
+        "at": "17:30",
+        "type": "insight"
+      }
+    ],
+    "writeAheadHours": 9,
+    "skipIfLateHours": 2,
     "jitterMinutes": 20,
     "minLeadMinutes": 5
   },
@@ -73,29 +106,61 @@
       "maxLines": 6,
       "angles": [
         {
-          "id": "take",
+          "id": "builder-take",
           "weight": 3,
-          "brief": "A clear, defensible opinion on ONE news item, grounded in what it changes for developers who ship. State the take in the first line."
+          "brief": "A clear, defensible opinion on ONE item: what it changes for people shipping products, developers or founders. The take goes in the first line, the concrete reason from the item right after. Be specific enough that someone could disagree."
+        },
+        {
+          "id": "business-of-ai",
+          "weight": 3,
+          "brief": "Read ONE item as a business story: pricing, costs, margins, distribution, who wins and who loses, what it does to SaaS or to startups. Use the numbers from the item where they exist."
+        },
+        {
+          "id": "worth-saving",
+          "weight": 2,
+          "brief": "Make it worth bookmarking. From ONE item: a one-line hook, then 2-3 concrete things a builder should check, change, or try because of it, one short line each. Only specifics the item supports."
+        },
+        {
+          "id": "contrarian",
+          "weight": 2,
+          "brief": "Push back on the obvious reading of ONE item, with a specific reason from the item. Firm, not snarky. Never dunk on a person or a company."
         },
         {
           "id": "what-it-means",
-          "weight": 3,
-          "brief": "What ONE release, tool, or paper actually changes, in plain words, for someone building real apps. Lead with the consequence, not the announcement."
+          "weight": 2,
+          "brief": "What ONE release, tool, or deal actually changes, in plain words, for someone building a real product. Lead with the consequence, not the announcement."
         },
         {
           "id": "paper-plain",
-          "weight": 2,
-          "brief": "ONE research paper from the list: its core finding in one sentence a working dev understands, then why it matters in practice. Only if a research item is in the list."
-        },
-        {
-          "id": "stack-angle",
-          "weight": 2,
-          "brief": "Connect ONE news item to full-stack work in the dev's stack (Django, Next.js, Postgres, Docker): what it changes or what to watch for."
+          "weight": 1,
+          "brief": "ONE research paper from the list: its core finding in one sentence a working builder understands, then why it matters in practice. Only if a research item is in the list."
         },
         {
           "id": "roundup",
           "weight": 1,
           "brief": "A one-line hook, then exactly three items from the list that matter to builders, one short line each. No numbering emoji."
+        }
+      ]
+    },
+    "bip": {
+      "maxChars": 275,
+      "maxLines": 6,
+      "lookbackDays": 5,
+      "angles": [
+        {
+          "id": "tried-result",
+          "weight": 3,
+          "brief": "ONE thing tried in this week's work and what happened. Lead with the result or the surprise, then what was tried. Only what the commits show."
+        },
+        {
+          "id": "problem-solved",
+          "weight": 3,
+          "brief": "ONE specific problem hit this week and exactly how it was fixed, concrete enough that another builder would bookmark it."
+        },
+        {
+          "id": "decision",
+          "weight": 2,
+          "brief": "ONE build decision made this week, the tradeoff, and the reason, stated plainly enough that someone could argue with it."
         }
       ]
     },
@@ -135,7 +200,11 @@
       "Claude",
       "Gemini",
       "agents",
-      "open source model"
+      "open source model",
+      "startup",
+      "YC",
+      "SaaS",
+      "pricing"
     ],
     "hnMinPoints": 60,
     "devtoTags": [
@@ -144,6 +213,7 @@
     ],
     "githubTopic": "llm",
     "sources": {
+      "techcrunch": true,
       "hackernews": true,
       "huggingface": true,
       "simonwillison": true,
@@ -151,7 +221,12 @@
       "lobsters": true,
       "githubRising": true
     },
-    "avoidRepeatWindow": 30
+    "avoidRepeatWindow": 30,
+    "maxSourceShare": 0.25,
+    "techcrunchFeeds": [
+      "https://techcrunch.com/category/artificial-intelligence/feed/",
+      "https://techcrunch.com/category/startups/feed/"
+    ]
   },
   "llm": {
     "provider": "claude",

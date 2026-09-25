@@ -2,13 +2,14 @@ import { http, log, warn, tokenize } from '../util.js';
 
 /*
  * Latest AI + dev news and research. Every source is free and keyless.
- * Each item: { source, kind: 'news'|'research'|'repo', title, url, summary, heat, publishedAt }
+ * Each item: { source, kind: 'news'|'business'|'research'|'repo', title, url, summary, heat, publishedAt }
  */
 
 const clip = (s, n = 280) => String(s || '').replace(/\s+/g, ' ').trim().slice(0, n);
 const decode = (s) => String(s || '')
   .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1')
   .replace(/<[^>]+>/g, ' ')
+  .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
   .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;|&#x27;/g, "'").replace(/&amp;/g, '&');
 
 async function hackerNews(cfg, since) {
@@ -54,7 +55,7 @@ async function simonWillison(cfg, since) {
       source: 'Simon Willison', kind: 'news', title: decode(get('title')).trim(),
       url: (e.match(/<link[^>]*href="([^"]+)"/) || [])[1],
       summary: clip(decode(get('summary') || get('content')), 400),
-      heat: 50, // curated feed with no score of its own; treated as mid-heat
+      heat: Date.parse(get('updated') || get('published')) || 0, // no score of its own: newest ranks highest
       publishedAt: get('updated') || get('published'),
     };
   }).filter((x) => new Date(x.publishedAt) >= since);
@@ -100,11 +101,35 @@ async function githubRising(cfg, since) {
   }));
 }
 
-const SOURCES = { hackernews: hackerNews, huggingface: huggingFacePapers, simonwillison: simonWillison, devto, lobsters, githubRising };
+/** Startup and AI business news: funding, pricing, deals. The founder side of the pool. */
+async function techcrunch(cfg, since) {
+  const out = [];
+  for (const feed of cfg.news.techcrunchFeeds || []) {
+    const r = await http(feed, {}, { label: 'techcrunch', retries: 1 });
+    for (const it of String(r.body || '').match(/<item>[\s\S]*?<\/item>/g) || []) {
+      const get = (tag) => (it.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)</${tag}>`)) || [])[1];
+      const publishedAt = get('pubDate');
+      if (!(new Date(publishedAt) >= since)) continue;
+      if (/\bDisrupt 20\d\d\b|\btickets?\b|StrictlyVC|\bdeal for your\b|\bsave (up to )?\$/i.test(decode(get('title')))) continue; // TC's own event ads
+      out.push({
+        source: 'TechCrunch', kind: 'business', title: decode(get('title')).trim(),
+        url: decode(get('link')).trim(), summary: clip(decode(get('description')), 400),
+        heat: Date.parse(publishedAt) || 0, // no score of its own: newest ranks highest
+        publishedAt, tags: (it.match(/<category>([\s\S]*?)<\/category>/g) || []).map((c) => decode(c).trim()),
+      });
+    }
+  }
+  return out;
+}
+
+const SOURCES = { techcrunch, hackernews: hackerNews, huggingface: huggingFacePapers, simonwillison: simonWillison, devto, lobsters, githubRising };
 
 /**
  * Collect, dedupe, and rank. Heat is converted to a within-source percentile so
- * HN points don't drown paper upvotes; stack relevance and recency break ties.
+ * HN points don't drown paper upvotes; interest overlap and recency break ties.
+ * A story covered by several sources gets a boost (that's what people are talking
+ * about), and no single source may fill more than news.maxSourceShare of the pool,
+ * so a day with 100 new papers doesn't crowd out the stories builders care about.
  */
 export async function collectNews(cfg, { exclude = new Set() } = {}) {
   const since = Date.now() - (cfg.news.lookbackHours ?? 72) * 3600e3;
@@ -126,23 +151,41 @@ export async function collectNews(cfg, { exclude = new Set() } = {}) {
     });
   }
 
+  for (const x of ranked) {
+    const t = tokenize(x.title);
+    x.coverage = 1 + ranked.filter((y) => y.source !== x.source && (y.url === x.url || overlap(t, tokenize(y.title)) >= 0.5)).length;
+    x.rank += Math.min(x.coverage - 1, 2) * 3;
+  }
+
+  const max = cfg.news.maxItems || 18;
+  const perSource = Math.max(3, Math.ceil(max * (cfg.news.maxSourceShare ?? 1)));
+  const bySource = new Map();
   const picked = [];
   const seenKeys = new Set();
   for (const x of ranked.sort((a, b) => b.rank - a.rank)) {
     const key = x.title.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 40);
     if (seenKeys.has(key) || exclude.has(x.url)) continue;
+    if ((bySource.get(x.source) || 0) >= perSource) continue;
     seenKeys.add(key);
+    bySource.set(x.source, (bySource.get(x.source) || 0) + 1);
     picked.push(x);
-    if (picked.length >= (cfg.news.maxItems || 18)) break;
+    if (picked.length >= max) break;
   }
   log(`news: ${picked.length} item(s) from ${enabled.length} source(s), ${batches.flat().length} seen`);
   return picked;
 }
 
+/** Share of the shorter title's words found in the other; needs 3+ shared words so generic ones ("language models") don't match. */
+function overlap(a, b) {
+  let inter = 0;
+  for (const w of a) if (b.has(w)) inter++;
+  return inter >= 3 ? inter / Math.min(a.size, b.size) : 0;
+}
+
 export function renderNews(items) {
   if (!items?.length) return '(no news collected)';
   return items.map((x, i) => [
-    `[${i + 1}] (${x.kind}, ${x.source}${x.stackHits ? ', touches your stack' : ''}) ${x.title}`,
+    `[${i + 1}] (${x.kind}, ${x.source}${x.coverage > 1 ? `, covered by ${x.coverage} sources` : ''}${x.stackHits ? ', touches your interests' : ''}) ${x.title}`,
     x.summary ? `    ${x.summary}` : null,
     x.reach ? `    reach: ${x.reach}` : null,
     `    url: ${x.url}`,

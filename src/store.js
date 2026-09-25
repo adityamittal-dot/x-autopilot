@@ -16,10 +16,9 @@ export function recentTexts(h, n = 20) {
 export function recentSourceUrls(h, n = 30) {
   return new Set(h.posts.slice(-n).flatMap((p) => p.sourceUrls || []));
 }
-/** True if a post of this type was already created today (UTC), to make re-runs safe. */
-export function postedToday(h, type) {
-  const day = new Date().toISOString().slice(0, 10);
-  return h.posts.some((p) => (p.type || 'recap') === type && String(p.createdAt).startsWith(day));
+/** True if this slot already has a post for this audience-local day, so re-runs and catch-up runs never double-post. */
+export function slotTaken(h, slotId, day) {
+  return h.posts.some((p) => p.slot === slotId && p.slotDay === day);
 }
 export function appendPost(h, entry) {
   h.posts.push(entry);

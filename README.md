@@ -1,16 +1,16 @@
 # x-autopilot
 
-**Grows reach on X on autopilot.** Every weekday it posts a sharp take on the latest AI
-and developer news and research, leaning toward your stack. Every Friday it posts a
-build-in-public recap of what you learned, shipped, and are working on, straight from
-your real GitHub activity. Then it pulls the engagement back and learns which kinds of
-posts get reach for *your* audience.
+**Grows reach on X on autopilot.** Three posts every weekday for builders (developers and
+technical founders): sharp takes on the latest AI, dev, and startup news and research.
+On Wednesday one slot is a build-in-public "here's what I tried" post, and on Friday a
+weekly recap, both straight from your real GitHub activity. Then it pulls the engagement
+back and learns which kinds of posts get reach for *your* audience.
 
 X only. Runs on GitHub Actions, publishes through Buffer, writes with Claude.
 
 ```
-Mon–Fri ─→ news + research feeds ─→ Haiku triages ~40 items ─→ Opus writes 3 variants ─┐
-Friday  ─→ your GitHub commits   ─→ Haiku condenses the week ─→ Opus writes 3 variants ─┤
+news slots ─→ news, startup + research feeds ─→ Haiku triages ~40 items ─→ Opus writes 3 variants ─┐
+Wed / Fri  ─→ your GitHub commits            ─→ Haiku condenses them    ─→ Opus writes 3 variants ─┤
                                                                                         ▼
                                quality gate ─→ best variant ─→ Buffer (fixed time) ─→ X
                                                                                         │
@@ -22,17 +22,21 @@ Friday  ─→ your GitHub commits   ─→ Haiku condenses the week ─→ Opus
 ## Schedule
 
 Times are chosen for the X algorithm: the first hour of engagement decides most of a
-post's reach, and developer audiences are most active on weekday mornings, US Eastern
-(research across 2026 studies: Tue–Thu 9–11 AM peaks, Sunday is ~23% below average).
+post's reach, and developer audiences are most active on weekdays, US Eastern. The three
+slots are hours apart because X counts a second post from the same author in one feed
+refresh at about half.
 
-| Day | Post | Goes live (New York) | India (IST) |
-|---|---|---|---|
-| Mon–Fri | AI/dev news take | 10:00 AM + up to 20 min jitter | 7:30 PM (8:30 PM in winter) |
-| Fri | Weekly recap | 1:00 PM + up to 20 min jitter | 10:30 PM (11:30 PM in winter) |
+| Slot | Mon, Tue, Thu | Wed | Fri | Goes live (New York) | India (IST, summer / winter) |
+|---|---|---|---|---|---|
+| morning | news take | news take | news take | 9:30 AM | 7:00 PM / 8:00 PM |
+| midday | news take | **I tried it** | **weekly recap** | 1:00 PM | 10:30 PM / 11:30 PM |
+| evening | news take | news take | news take | 5:30 PM | 3:00 AM / 4:00 AM |
 
-The workflow runs hours earlier and hands Buffer the exact publish time, so GitHub's
-cron delays (often 1–4 hours) never make a post late. Daylight saving is handled.
-Change the times in `config.json → schedule`.
+Each slot also gets up to 20 minutes of jitter. The workflow runs hours before each slot
+and hands Buffer the exact publish time, so GitHub's cron delays (often hours) don't make
+posts late. Every run fills all slots that are due, so a run GitHub drops is caught up by
+the next, and a filled slot is never posted twice. Daylight saving is handled. Change it
+all in `config.json → schedule`.
 
 ---
 
@@ -50,12 +54,18 @@ Change the times in `config.json → schedule`.
   passes the quality gate → no post. A missed slot costs nothing; a bad post costs reach.
 - **It never invents facts.** Every claim must come from the supplied news items or your
   commits. Opinions are allowed; fake numbers are not.
+- **It writes for replies and bookmarks, not likes.** X's ranking weighs a reply at ~27x
+  a like and a bookmark at ~20x, and a mute costs more than likes earn. `playbook.md`
+  has the details the writer follows.
+- **No single source floods the pool.** Each source can fill at most a quarter of the
+  news pool, and a story several sources cover ranks higher, so a day with 100 new
+  papers doesn't crowd out the model release everyone's talking about.
 
 | Piece | Service | Cost |
 |---|---|---|
 | Scheduler | GitHub Actions (public repo) | $0 |
 | Recap source | GitHub REST API | $0 |
-| News + research | Hacker News, Hugging Face papers, Simon Willison, dev.to, Lobsters, GitHub search (all keyless, read-only) | $0 |
+| News + research | TechCrunch (AI + startups), Hacker News, Hugging Face papers, Simon Willison, dev.to, Lobsters, GitHub search (all keyless, read-only) | $0 |
 | Writer + worker | Claude Opus 5.5 + Haiku 4.5 via `claude setup-token` | $0 extra on a subscription |
 | Publishing + metrics | Buffer Free → X | $0 |
 
@@ -82,10 +92,12 @@ Change the times in `config.json → schedule`.
    export BUFFER_API_KEY=...        # Claude uses your local `claude` login
    npm run doctor                   # every credential, the X channel, the queue, publish times
    npm run dry                      # a real news post, printed, nothing sent
+   npm run dry:bip                  # a real "I tried it" post, printed, nothing sent
    npm run dry:recap                # a real recap, printed, nothing sent
    ```
-7. **Go live.** `Actions → post → Run workflow` with **dry_run off**. The post should
-   appear in Buffer's X queue with a publish time set. After that the crons take over.
+7. **Go live.** The crons take over on the next weekday. To test the whole path first,
+   `Actions → post → Run workflow` with type **insight** and **dry_run off**: one post
+   appears in Buffer's X queue a few minutes out.
 
 ---
 
@@ -112,10 +124,12 @@ goes live. The algorithm weights author replies heavily.
 
 | I want... | Change |
 |---|---|
-| Different publish times | `schedule.publishAt` + `schedule.audienceTimezone` |
-| Different days | `cron` lines in `.github/workflows/post.yml` (keep them hours before publish time) |
+| Different publish times, or more/fewer posts a day | `schedule.slots` + `schedule.audienceTimezone` (add a `cron` line in `.github/workflows/post.yml` that runs a few hours before any new slot) |
+| Different days | `schedule.days` and the `cron` day fields |
+| A different post type in a slot on some days | `schedule.slots[].byWeekday` (types: `insight`, `bip`, `recap`) |
 | Different mix of post styles | `formats.<type>.angles[].weight` |
-| Different news sources or topics | `news.sources`, `news.hnQueries`, `news.devtoTags` |
+| Different news sources or topics | `news.sources`, `news.hnQueries`, `news.devtoTags`, `news.techcrunchFeeds`, `news.maxSourceShare` |
+| A different audience | `identity.audience`, `identity.interests` |
 | Longer posts (X Premium) | `formats.<type>.maxChars` and `maxLines` |
 | A different writer or worker model | `llm.claude.model`, `llm.worker.model`, `llm.claude.effort` |
 | Stricter or looser filtering | `quality.*` |
@@ -129,8 +143,9 @@ goes live. The algorithm weights author replies heavily.
 ```bash
 npm run doctor      # verify every credential and connection
 npm run dry         # generate and print a news post, send nothing
+npm run dry:bip     # generate and print an "I tried it" post, send nothing
 npm run dry:recap   # generate and print the weekly recap, send nothing
-npm run post        # generate and schedule for real (POST_TYPE=insight|recap)
+npm run post        # fill every slot due now, for real (or POST_TYPE=insight|bip|recap for one post)
 npm run metrics     # pull X engagement via Buffer
 npm run report      # rebuild data/report.html
 ```
@@ -146,14 +161,14 @@ config.json              every knob except the writing
 voice.md                 how you sound
 playbook.md              how reach-focused X posts are shaped
 src/
-  main.js                one run: collect → prep → write → gate → Buffer
-  sources/news.js        AI/dev news + research feeds, ranked for reach and stack fit
+  main.js                one run: every due slot → collect → prep → write → gate → Buffer
+  sources/news.js        AI, dev + startup news and research feeds, ranked for reach
   sources/github.js      your week of commits, PRs and releases
   prep.js                cheap worker model: news triage, commit condensing
   llm.js                 Claude CLI (writer + worker roles), Gemini fallback
-  generate.js            writer prompts for news posts and the weekly recap
+  generate.js            writer prompts: news takes, "I tried it", weekly recap
   quality.js             hard gate + soft scoring
-  scheduler.js           angle selection, epsilon-greedy over past engagement
+  scheduler.js           which slots are due; angle selection, epsilon-greedy over past engagement
   publish/buffer.js      Buffer GraphQL: channels, createPost, metrics
   metrics.js             daily X engagement sync
   store.js               data/history.json

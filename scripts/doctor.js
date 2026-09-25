@@ -15,12 +15,14 @@ ok(`github user: ${cfg.github.username}`);
 cfg.identity.handle ? ok(`X handle: @${cfg.identity.handle}`) : note('identity.handle is empty — set your X handle in config.json');
 loadVoice().length > 200 ? ok('voice.md loaded') : bad('voice.md is missing or nearly empty');
 loadPlaybook().length > 200 ? ok('playbook.md loaded') : bad('playbook.md is missing or nearly empty');
-for (const type of Object.keys(cfg.formats)) {
-  const tz = cfg.schedule.audienceTimezone;
-  const at = zonedTime(inZone(new Date(), tz).date, cfg.schedule.publishAt[type], tz);
+const tz = cfg.schedule.audienceTimezone;
+for (const slot of cfg.schedule.slots) {
+  const at = zonedTime(inZone(new Date(), tz).date, slot.at, tz);
   const ist = at.toLocaleTimeString('en-GB', { timeZone: 'Asia/Calcutta', hour: '2-digit', minute: '2-digit' });
-  ok(`${type} posts go live ${cfg.schedule.publishAt[type]} ${tz} (today: ${at.toISOString().slice(11, 16)} UTC, ${ist} IST)`);
+  const types = [slot.type, ...Object.entries(slot.byWeekday || {}).map(([d, t]) => `${t} on ${d}`)].join(', ');
+  ok(`${slot.id} slot goes live ${slot.at} ${tz} (today: ${at.toISOString().slice(11, 16)} UTC, ${ist} IST) — ${types}`);
 }
+note(`posting days: ${(cfg.schedule.days || []).join(' ') || 'every day'}`);
 
 console.log('\nGitHub (recap source)');
 try {

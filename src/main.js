@@ -1,28 +1,33 @@
 import { loadConfig, loadVoice, loadPlaybook, log, warn, die, inZone, publishTime } from './util.js';
 import { collectGitHubActivity } from './sources/github.js';
 import { collectNews } from './sources/news.js';
-import { buildInsightPrompt, buildRecapPrompt, generateVariants } from './generate.js';
+import { buildInsightPrompt, buildBipPrompt, buildRecapPrompt, generateVariants } from './generate.js';
 import { hasClaudeCredential } from './llm.js';
 import { triageNews, condenseActivity } from './prep.js';
 import { validate, score } from './quality.js';
-import { chooseAngle } from './scheduler.js';
+import { chooseAngle, dueSlots } from './scheduler.js';
 import { resolveChannel, createPost } from './publish/buffer.js';
-import { loadHistory, appendPost, recentTexts, recentSourceUrls, postedToday } from './store.js';
+import { loadHistory, appendPost, recentTexts, recentSourceUrls } from './store.js';
 
 /*
- * One run = one X post. Token-heavy prep (news triage, commit condensing) runs on the
- * cheap worker model; only the short briefs reach the expensive writer model.
- *   insight: latest AI/dev news + research, leaning toward the dev's stack (weekdays)
- *   recap:   what I learned / shipped / am working on, from this week's GitHub activity (weekly)
+ * One run fills every slot that is due (config.json → schedule.slots), one X post each.
+ * Token-heavy prep (news triage, commit condensing) runs on the cheap worker model;
+ * only the short briefs reach the expensive writer model.
+ *   insight: a builder's take on the latest AI, dev, and startup news and research
+ *   bip:     one thing tried, fixed, or decided, from this week's GitHub work (midweek)
+ *   recap:   what I learned / shipped / am working on this week (weekly)
+ *
+ * `--type <t>` skips the slot logic and writes one post of that type, going live a
+ * few minutes after the run. That's what `npm run dry` and manual runs use.
  */
 
 const argv = process.argv.slice(2);
 const DRY = argv.includes('--dry-run') || process.env.DRY_RUN === 'true';
-const typeArg = argv[argv.indexOf('--type') + 1];
-const TYPE = (argv.includes('--type') ? typeArg : process.env.POST_TYPE) || 'insight';
+const typeArg = argv.includes('--type') ? argv[argv.indexOf('--type') + 1] : process.env.POST_TYPE;
+const TYPE = typeArg && typeArg !== 'auto' ? typeArg : null;
 
 function preflight(cfg) {
-  if (!cfg.formats[TYPE]) die(`unknown post type "${TYPE}" — use one of: ${Object.keys(cfg.formats).join(', ')}`);
+  if (TYPE && !cfg.formats[TYPE]) die(`unknown post type "${TYPE}" — use one of: ${Object.keys(cfg.formats).join(', ')}`);
   // In CI there is no interactive login, so a missing credential must stop the run loudly.
   if (process.env.CI && cfg.llm.provider === 'claude' && !hasClaudeCredential() && !process.env.GEMINI_API_KEY) {
     die('No LLM credential. Add the CLAUDE_CODE_OAUTH_TOKEN repo secret (run `claude setup-token` to create it).');
@@ -33,38 +38,57 @@ function preflight(cfg) {
 async function run() {
   const cfg = loadConfig();
   preflight(cfg);
-  const fmt = cfg.formats[TYPE];
-  const voice = loadVoice();
-  const playbook = loadPlaybook();
-  const history = loadHistory();
-  log(`mode=${DRY ? 'DRY RUN' : 'live'} type=${TYPE} posts=${history.posts.length}`);
+  const ctx = { cfg, voice: loadVoice(), playbook: loadPlaybook(), history: loadHistory(), news: null, activity: {} };
 
-  if (!DRY && postedToday(history, TYPE)) {
-    warn(`A ${TYPE} post was already created today. Skipping so a re-run doesn't double-post.`);
-    return;
+  const slots = TYPE ? [{ id: 'manual', type: TYPE, day: null, at: null }] : dueSlots(cfg, ctx.history);
+  log(`mode=${DRY ? 'DRY RUN' : 'live'} posts=${ctx.history.posts.length} ` +
+    `slots=${slots.map((s) => `${s.id}:${s.type}`).join(',') || 'none due'}`);
+  if (!slots.length) return;
+
+  // A failed slot must not take the others down; the next scheduled run retries it.
+  let failed = 0;
+  for (const slot of slots) {
+    try {
+      await runSlot(ctx, slot);
+    } catch (e) {
+      failed++;
+      warn(`slot ${slot.id} (${slot.type}): ${e.message}`);
+    }
   }
+  if (failed) die(`${failed} of ${slots.length} slot(s) produced no post (see above).`);
+}
+
+async function runSlot(ctx, slot) {
+  const { cfg, voice, playbook, history } = ctx;
+  const type = slot.type;
+  const fmt = cfg.formats[type];
+  log(`── ${slot.id}: ${type}`);
 
   const recent = recentTexts(history, cfg.quality.similarityWindow);
   let buildPrompt, news = [], activity = null, angle;
 
-  if (TYPE === 'recap') {
-    cfg.github.lookbackDays = fmt.lookbackDays ?? 7;
-    activity = await collectGitHubActivity(cfg);
+  if (type === 'recap' || type === 'bip') {
+    const days = fmt.lookbackDays ?? 7;
+    activity = ctx.activity[days] ??= await collectGitHubActivity({ ...cfg, github: { ...cfg.github, lookbackDays: days } });
     if (!activity.repos.length) {
-      warn('No GitHub activity this week. Skipping the recap rather than inventing one.');
+      warn(`No GitHub activity in the last ${days} days. Skipping rather than inventing a post.`);
       return;
     }
-    angle = chooseAngle(cfg, history, TYPE, { activity });
+    angle = chooseAngle(cfg, history, type, { activity });
     const digest = await condenseActivity(activity, cfg);          // cheap worker model
-    buildPrompt = () => buildRecapPrompt({ cfg, voice, playbook, digest, angle, recent });
+    const build = type === 'bip' ? buildBipPrompt : buildRecapPrompt;
+    buildPrompt = () => build({ cfg, voice, playbook, digest, angle, recent });
   } else {
-    news = await collectNews(cfg, { exclude: recentSourceUrls(history, cfg.news.avoidRepeatWindow) });
+    // One fetch per run; each slot drops the stories already posted, including by an earlier slot.
+    ctx.news ??= await collectNews(cfg);
+    const used = recentSourceUrls(history, cfg.news.avoidRepeatWindow);
+    news = ctx.news.filter((n) => !used.has(n.url));
     if (news.length < (cfg.news.minItems ?? 4)) {
       warn(`Only ${news.length} fresh news item(s). Skipping rather than posting something thin.`);
       return;
     }
     news = await triageNews(news, cfg, recent);                    // cheap worker model
-    angle = chooseAngle(cfg, history, TYPE, { news });
+    angle = chooseAngle(cfg, history, type, { news });
     buildPrompt = () => buildInsightPrompt({ cfg, voice, playbook, news, angle, recent });
   }
 
@@ -91,12 +115,12 @@ async function run() {
 
   if (!chosen) {
     // No template fallback: a weak post costs more reach than a skipped slot.
-    die(model
-      ? 'Nothing passed the quality gate after 2 attempts. Skipping this slot.'
-      : 'The LLM never answered (see warnings above). Nothing was posted.');
+    throw new Error(model
+      ? 'nothing passed the quality gate after 2 attempts'
+      : 'the LLM never answered (see warnings above)');
   }
 
-  const { dueAt, onSlot } = publishTime(cfg, TYPE);
+  const { dueAt, onSlot } = publishTime(cfg, slot.at);
   const zone = inZone(dueAt, cfg.schedule.audienceTimezone);
   const localSlot = `${zone.weekday}-${String(zone.hour).padStart(2, '0')}`;
   const newsUrls = new Set(news.map((n) => n.url));
@@ -105,8 +129,8 @@ async function run() {
   console.log('\n' + '─'.repeat(64));
   console.log(chosen.text);
   console.log('─'.repeat(64));
-  console.log(`type=${TYPE} angle=${angle.id} model=${model} chars=${chosen.text.length} ` +
-    `due=${dueAt.toISOString()} (${localSlot} ${cfg.schedule.audienceTimezone}${onSlot ? '' : ', run was late'})`);
+  console.log(`slot=${slot.id} type=${type} angle=${angle.id} model=${model} chars=${chosen.text.length} ` +
+    `due=${dueAt.toISOString()} (${localSlot} ${cfg.schedule.audienceTimezone}${onSlot || !slot.at ? '' : ', run was late'})`);
   if (sourceUrls.length) console.log(`sources: ${sourceUrls.join(' ')}`);
   console.log(`why: ${chosen.why}\n`);
 
@@ -120,7 +144,9 @@ async function run() {
 
   appendPost(history, {
     id: post.id,
-    type: TYPE,
+    type,
+    slot: slot.id,
+    slotDay: slot.day || inZone(new Date(), cfg.schedule.audienceTimezone).date,
     text: chosen.text,
     angle: angle.id,
     model,
@@ -135,7 +161,7 @@ async function run() {
     metricsUpdatedAt: null,
   });
 
-  log(`Done. Queued in Buffer for X at ${dueAt.toISOString()}.`);
+  log(`Queued in Buffer for X at ${dueAt.toISOString()}.`);
 }
 
 run().catch((e) => die(e.stack || e.message));
