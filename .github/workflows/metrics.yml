@@ -2,7 +2,7 @@ name: metrics
 
 on:
   schedule:
-    - cron: '20 3 * * *'   # daily, 08:50 IST
+    - cron: '20 3 * * *'   # daily
   workflow_dispatch:
 
 permissions:
@@ -15,13 +15,14 @@ concurrency:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
-          node-version: '20'
+          node-version: '22'
 
-      - name: Pull engagement from Buffer
+      - name: Pull X engagement from Buffer
         env:
           BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
         run: node src/metrics.js
@@ -35,14 +36,17 @@ jobs:
           path: data/report.html
           retention-days: 30
 
+      # Only commit when the numbers changed. The report is regenerated every run,
+      # but a new timestamp alone isn't worth a commit.
       - name: Commit
         run: |
-          if [ -n "$(git status --porcelain data/)" ]; then
+          if [ -n "$(git status --porcelain data/history.json)" ]; then
             git config user.name  "x-autopilot"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add data/
             git commit -m "chore: sync metrics $(date -u +%Y-%m-%d)"
+            git pull --rebase --autostash
             git push
           else
-            echo "nothing to commit"
+            echo "no metric changes"
           fi

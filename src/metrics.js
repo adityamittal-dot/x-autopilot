@@ -22,6 +22,7 @@ async function run() {
   });
 
   if (!targets.length) { log('metrics: nothing to sync'); return; }
+  if (!process.env.BUFFER_API_KEY) die('BUFFER_API_KEY is not set — cannot pull X metrics. Add it as a repo secret.');
   log(`metrics: syncing ${targets.length} post(s)`);
 
   let updated = 0;
@@ -31,6 +32,8 @@ async function run() {
       if (m) {
         p.metrics = m.metrics;
         p.status = m.status;
+        if (m.sentAt) p.sentAt = m.sentAt;
+        if (m.url) p.url = m.url;                                   // the live post on X
         p.metricsUpdatedAt = new Date().toISOString();
         updated++;
         log(`  ${p.id}: ${Object.entries(m.metrics).map(([k, v]) => `${k}=${v}`).join(' ') || '(no metrics yet)'}`);

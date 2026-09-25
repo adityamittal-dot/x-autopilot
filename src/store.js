@@ -12,10 +12,14 @@ export function saveHistory(h) {
 export function recentTexts(h, n = 20) {
   return h.posts.slice(-n).map((p) => p.text);
 }
-export function daysSinceLastPost(h) {
-  const last = h.posts[h.posts.length - 1];
-  if (!last) return null;
-  return (Date.now() - new Date(last.createdAt).getTime()) / 864e5;
+/** URLs of news items already covered, so the same story isn't posted twice. */
+export function recentSourceUrls(h, n = 30) {
+  return new Set(h.posts.slice(-n).flatMap((p) => p.sourceUrls || []));
+}
+/** True if a post of this type was already created today (UTC), to make re-runs safe. */
+export function postedToday(h, type) {
+  const day = new Date().toISOString().slice(0, 10);
+  return h.posts.some((p) => (p.type || 'recap') === type && String(p.createdAt).startsWith(day));
 }
 export function appendPost(h, entry) {
   h.posts.push(entry);

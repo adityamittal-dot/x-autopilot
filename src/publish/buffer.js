@@ -82,12 +82,12 @@ export async function createPost({ channelId, text, dueAt }) {
 
 export async function getPostMetrics(postId) {
   const d = await gql(
-    `query { post(input: { id: ${q(postId)} }) { id text status metrics { type name value unit } metricsUpdatedAt } }`,
+    `query { post(input: { id: ${q(postId)} }) { id status sentAt externalLink metrics { type name value unit } metricsUpdatedAt } }`,
     'buffer:metrics'
   );
   const p = d?.post;
   if (!p) return null;
   const metrics = {};
   for (const m of p.metrics || []) metrics[m.type] = m.value;
-  return { id: p.id, status: p.status, metrics, updatedAt: p.metricsUpdatedAt };
+  return { id: p.id, status: p.status, sentAt: p.sentAt, url: p.externalLink, metrics, updatedAt: p.metricsUpdatedAt };
 }

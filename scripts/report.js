@@ -11,10 +11,11 @@ const posts = [...h.posts].reverse();
 const byAngle = new Map();
 for (const p of h.posts) {
   const e = engagementOf(p);
-  const a = byAngle.get(p.angle) || { n: 0, scored: 0, sum: 0 };
+  const key = `${p.type || 'recap'} / ${p.angle}`;
+  const a = byAngle.get(key) || { n: 0, scored: 0, sum: 0 };
   a.n++;
   if (e !== null) { a.scored++; a.sum += e; }
-  byAngle.set(p.angle, a);
+  byAngle.set(key, a);
 }
 const angleRows = [...byAngle.entries()]
   .map(([angle, a]) => ({ angle, n: a.n, avg: a.scored ? a.sum / a.scored : null }))
@@ -28,7 +29,7 @@ const metricKeys = [...new Set(h.posts.flatMap((p) => Object.keys(p.metrics || {
 
 const html = `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>x-autopilot report</title>
+<title>X reach report</title>
 <style>
 :root{--bg:#fbfbfa;--fg:#1a1a18;--mut:#6b6b66;--line:#e4e4e0;--card:#fff;--acc:#2f6f4e}
 @media(prefers-color-scheme:dark){:root{--bg:#131311;--fg:#eceae4;--mut:#9a9a92;--line:#2c2c28;--card:#1c1c19;--acc:#7fc9a1}}
@@ -50,7 +51,7 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
 .bar{height:6px;background:var(--acc);border-radius:3px;min-width:2px}
 .empty{color:var(--mut);padding:18px;text-align:center}
 </style></head><body>
-<h1>x-autopilot</h1>
+<h1>X reach report</h1>
 <p class="sub">@${esc(cfg.identity.handle || cfg.github.username)} · generated ${new Date().toISOString().slice(0, 16).replace('T', ' ')} UTC</p>
 
 <div class="grid">
@@ -62,7 +63,7 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
 
 <h2>Which angle performs</h2>
 <div class="wrap">${angleRows.length ? `<table>
-<tr><th>Angle</th><th class="n">Posts</th><th class="n">Avg engagement /1k</th><th></th></tr>
+<tr><th>Type / angle</th><th class="n">Posts</th><th class="n">Avg engagement /1k</th><th></th></tr>
 ${angleRows.map((r) => {
   const max = Math.max(...angleRows.map((x) => x.avg ?? 0), 1);
   return `<tr><td>${esc(r.angle)}</td><td class="n">${r.n}</td><td class="n">${r.avg === null ? '—' : r.avg.toFixed(1)}</td>
@@ -71,22 +72,22 @@ ${angleRows.map((r) => {
 
 <h2>Which slot performs</h2>
 <div class="wrap">${slots.length ? `<table>
-<tr><th>Local slot</th><th class="n">Posts</th><th class="n">Avg engagement /1k</th></tr>
+<tr><th>Audience-local slot</th><th class="n">Posts</th><th class="n">Avg engagement /1k</th></tr>
 ${slots.map((s) => `<tr><td>${esc(s.slot)}</td><td class="n">${s.n}</td><td class="n">${s.avg.toFixed(1)}</td></tr>`).join('')}
 </table>` : '<p class="empty">Needs a few posts with metrics before this is meaningful.</p>'}</div>
 
 <h2>Posts</h2>
 <div class="wrap">${posts.length ? `<table>
-<tr><th>When</th><th>Angle</th><th>Post</th>${metricKeys.map((k) => `<th class="n">${esc(k)}</th>`).join('')}</tr>
+<tr><th>When</th><th>Type / angle</th><th>Post</th>${metricKeys.map((k) => `<th class="n">${esc(k)}</th>`).join('')}</tr>
 ${posts.map((p) => `<tr>
   <td>${esc((p.dueAt || p.createdAt).slice(0, 10))}<br><span class="tag">${esc(p.localSlot || '')}</span></td>
-  <td>${esc(p.angle)}</td>
-  <td class="post">${esc(p.text)}</td>
+  <td>${esc(p.type || 'recap')}<br><span class="tag">${esc(p.angle)}</span></td>
+  <td class="post">${esc(p.text)}${p.url ? `<br><a href="${esc(p.url)}">view on X</a>` : ''}</td>
   ${metricKeys.map((k) => `<td class="n">${num(p.metrics?.[k])}</td>`).join('')}
 </tr>`).join('')}</table>` : '<p class="empty">Nothing published yet. Run <code>npm run dry</code> first.</p>'}</div>
 
 <h2>Notes</h2>
-<p class="sub">Engagement /1k = (reactions + comments + reposts + saves + 5&times;follows) &divide; impressions &times; 1000, so a small post is not buried by a big one. Metrics come from Buffer; X's own analytics at analytics.x.com stays the source of truth for follower growth.</p>
+<p class="sub">Engagement /1k = (reactions + comments + reposts + saves + 5&times;follows) &divide; impressions &times; 1000, so a small post is not buried by a big one. Metrics are X's numbers, pulled through Buffer; X's own analytics at analytics.x.com stays the source of truth for follower growth.</p>
 </body></html>`;
 
 const out = path.join(ROOT, 'data', 'report.html');
