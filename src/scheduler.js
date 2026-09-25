@@ -1,4 +1,28 @@
-import { pickWeighted, log } from './util.js';
+import { pickWeighted, log, inZone, zonedTime } from './util.js';
+import { slotTaken } from './store.js';
+
+/**
+ * Today's slots that should be written now: inside their write-ahead window, not
+ * already posted, and not so far past their time that they'd bunch up with the next.
+ * Every scheduled run checks all slots, so a run GitHub delayed or dropped is
+ * picked up by the next one.
+ */
+export function dueSlots(cfg, history, now = new Date()) {
+  const s = cfg.schedule;
+  const tz = s.audienceTimezone || 'UTC';
+  const today = inZone(now, tz);
+  if (s.days && !s.days.includes(today.weekday)) return [];
+  return s.slots
+    .map((slot) => ({
+      id: slot.id,
+      type: slot.byWeekday?.[today.weekday] || slot.type,
+      day: today.date,
+      at: zonedTime(today.date, slot.at, tz),
+    }))
+    .filter((x) => now >= x.at.getTime() - (s.writeAheadHours ?? 9) * 3600e3)
+    .filter((x) => now <= x.at.getTime() + (s.skipIfLateHours ?? 2) * 3600e3)
+    .filter((x) => !slotTaken(history, x.id, x.day));
+}
 
 /**
  * Engagement score for a stored post, from whatever metrics Buffer returned.
@@ -62,8 +86,11 @@ export function chooseAngle(cfg, history, type, ctx = {}) {
   return best.a;
 }
 
+const BUSINESS = /\$\d|\bpric|\bfund|\braise|\brevenue|\bcost|\bmargin|\bstartup|\bsaas\b|\bipo\b|\bacqui/i;
+
 function isEligible(angle, { news }) {
   if (angle.id === 'paper-plain') return (news || []).some((n) => n.kind === 'research');
+  if (angle.id === 'business-of-ai') return (news || []).some((n) => n.kind === 'business' || BUSINESS.test(`${n.title} ${n.summary}`));
   if (angle.id === 'roundup') return (news || []).length >= 6;
   return true;
 }

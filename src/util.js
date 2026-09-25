@@ -132,17 +132,15 @@ export function zonedTime(ymd, hhmm, timeZone) {
 }
 
 /**
- * When the post should go live: today's slot in the audience's timezone, plus jitter.
- * If the run is already past the slot (GitHub cron delays), publish shortly after now.
+ * When the post should go live: the slot time plus jitter. If the run is already
+ * past it (GitHub cron delays) or there is no slot (a manual run), publish shortly after now.
  */
-export function publishTime(cfg, type, now = new Date()) {
+export function publishTime(cfg, slotAt, now = new Date()) {
   const s = cfg.schedule;
-  const tz = s.audienceTimezone || 'UTC';
-  const slot = zonedTime(inZone(now, tz).date, s.publishAt[type], tz);
   const jitter = Math.floor(Math.random() * ((s.jitterMinutes ?? 0) + 1)) * 60_000;
   const earliest = now.getTime() + (s.minLeadMinutes ?? 5) * 60_000;
-  const due = slot.getTime() + jitter >= earliest ? slot.getTime() + jitter : earliest + jitter;
-  return { dueAt: new Date(due), onSlot: slot.getTime() + jitter >= earliest };
+  const onSlot = Boolean(slotAt) && slotAt.getTime() + jitter >= earliest;
+  return { dueAt: new Date(onSlot ? slotAt.getTime() + jitter : earliest + jitter), onSlot };
 }
 
 export function pickWeighted(items, weightFn = (x) => x.weight ?? 1) {

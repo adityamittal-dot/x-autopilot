@@ -20,7 +20,7 @@ export async function triageNews(news, cfg, recent) {
   const prompt = `Below is today's pool of AI and developer news and research, numbered.
 
 === THE AUDIENCE ===
-Developers on X. The account belongs to a full-stack developer.
+${cfg.identity.audience || 'Developers on X.'} The account belongs to a full-stack developer.
 Stack: ${cfg.identity.stack.join(', ')}
 Interests: ${cfg.identity.interests.join(', ')}
 
@@ -31,10 +31,13 @@ ${recent.length ? recent.slice(-10).map((t) => `- ${t.replace(/\n/g, ' ')}`).joi
 ${renderNews(news)}
 
 === TASK ===
-Choose the ${keep} items with the most reach potential for developers on X right now:
-genuinely new, consequential for people who build software, and something a working
-developer can have a real opinion on. Prefer items touching the stack or interests when
-potential is similar. Include at least one research item if a strong one exists.
+Choose the ${keep} items with the most reach potential for builders on X right now:
+genuinely new, consequential for people who build software or run it as a business, and
+something a working developer can have a real opinion on. Big moves people are already
+talking about (model releases, pricing changes, major deals, security incidents) beat
+niche ones. Keep a mix: at least two business or startup items (pricing, funding, deals,
+what AI does to SaaS) when strong ones exist, and at most one research paper unless
+papers clearly dominate the day. Prefer items touching the interests when potential is similar.
 
 For each, write a brief using ONLY facts stated in that item's title and summary.
 Do not add model sizes, benchmarks, dates, company names, or any detail not in the text.
