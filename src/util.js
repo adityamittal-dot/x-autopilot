@@ -22,10 +22,12 @@ export function loadConfig() {
   return cfg;
 }
 
-export function loadVoice() {
-  const p = path.join(ROOT, 'voice.md');
+const readText = (name) => {
+  const p = path.join(ROOT, name);
   return fs.existsSync(p) ? fs.readFileSync(p, 'utf8') : '';
-}
+};
+export const loadVoice = () => readText('voice.md');
+export const loadPlaybook = () => readText('playbook.md');
 
 /* ---------- json fs ---------- */
 export function readJSON(p, fallback) {
@@ -114,6 +116,33 @@ export function inZone(date, timeZone) {
   }).formatToParts(date);
   const g = (k) => f.find((p) => p.type === k)?.value;
   return { weekday: g('weekday'), hour: Number(g('hour')), date: `${g('year')}-${g('month')}-${g('day')}` };
+}
+
+/** UTC Date for a wall-clock time ("HH:MM") on a given calendar day in an IANA timezone. DST-safe. */
+export function zonedTime(ymd, hhmm, timeZone) {
+  const [h, m] = hhmm.split(':').map(Number);
+  const guess = new Date(`${ymd}T${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:00Z`);
+  // offset = what that instant reads as in the zone, minus what we wanted
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone, hourCycle: 'h23', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit',
+  }).formatToParts(guess);
+  const g = (k) => Number(parts.find((p) => p.type === k).value);
+  const seen = Date.UTC(g('year'), g('month') - 1, g('day'), g('hour'), g('minute'));
+  return new Date(guess.getTime() - (seen - guess.getTime()));
+}
+
+/**
+ * When the post should go live: today's slot in the audience's timezone, plus jitter.
+ * If the run is already past the slot (GitHub cron delays), publish shortly after now.
+ */
+export function publishTime(cfg, type, now = new Date()) {
+  const s = cfg.schedule;
+  const tz = s.audienceTimezone || 'UTC';
+  const slot = zonedTime(inZone(now, tz).date, s.publishAt[type], tz);
+  const jitter = Math.floor(Math.random() * ((s.jitterMinutes ?? 0) + 1)) * 60_000;
+  const earliest = now.getTime() + (s.minLeadMinutes ?? 5) * 60_000;
+  const due = slot.getTime() + jitter >= earliest ? slot.getTime() + jitter : earliest + jitter;
+  return { dueAt: new Date(due), onSlot: slot.getTime() + jitter >= earliest };
 }
 
 export function pickWeighted(items, weightFn = (x) => x.weight ?? 1) {

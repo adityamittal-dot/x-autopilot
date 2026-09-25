@@ -20,11 +20,12 @@ export function engagementOf(post) {
  * Epsilon-greedy angle selection. Explores until an angle has enough samples,
  * then leans on what actually performed. Falls back to configured weights.
  */
-export function chooseAngle(cfg, history, activity) {
-  const angles = cfg.content.angles.filter((a) => isEligible(a, activity));
-  if (!angles.length) return cfg.content.angles[0];
+export function chooseAngle(cfg, history, type, ctx = {}) {
+  const all = cfg.formats[type].angles;
+  const angles = all.filter((a) => isEligible(a, ctx));
+  if (!angles.length) return all[0];
 
-  const recentIds = history.posts.slice(-3).map((p) => p.angle);
+  const recentIds = history.posts.filter((p) => (p.type || 'recap') === type).slice(-2).map((p) => p.angle);
   const fresh = angles.filter((a) => !recentIds.includes(a.id));
   const pool = fresh.length ? fresh : angles;
 
@@ -37,7 +38,7 @@ export function chooseAngle(cfg, history, activity) {
   const stats = new Map();
   for (const p of history.posts) {
     const e = engagementOf(p);
-    if (e === null || !p.angle) continue;
+    if (e === null || !p.angle || (p.type || 'recap') !== type) continue;
     const s = stats.get(p.angle) || { n: 0, sum: 0 };
     s.n++; s.sum += e;
     stats.set(p.angle, s);
@@ -61,19 +62,13 @@ export function chooseAngle(cfg, history, activity) {
   return best.a;
 }
 
-function isEligible(angle, activity) {
-  if (angle.id === 'new-project') {
-    return (activity.repos || []).some((r) => r.isNew || r.wentPublic) ||
-           (activity.highlights || []).some((h) => h.kind === 'new-repo' || h.kind === 'went-public');
-  }
-  if (angle.id === 'milestone') {
-    return (activity.highlights || []).some((h) => h.kind === 'release') ||
-           (activity.repos || []).some((r) => (r.stars || 0) >= 10);
-  }
-  return (activity.repos || []).length > 0;
+function isEligible(angle, { news }) {
+  if (angle.id === 'paper-plain') return (news || []).some((n) => n.kind === 'research');
+  if (angle.id === 'roundup') return (news || []).length >= 6;
+  return true;
 }
 
-/** Best hour-of-day per weekday, learned from history; null until there is data. */
+/** Best audience-local weekday-hour slot, learned from history; empty until there is data. */
 export function bestSlotReport(history) {
   const buckets = new Map();
   for (const p of history.posts) {

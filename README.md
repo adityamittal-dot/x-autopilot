@@ -1,186 +1,110 @@
 # x-autopilot
 
-**Posts to X three times a week, in your voice, about what you actually shipped.**
+**Grows reach on X on autopilot.** Every weekday it posts a sharp take on the latest AI
+and developer news and research, leaning toward your stack. Every Friday it posts a
+build-in-public recap of what you learned, shipped, and are working on, straight from
+your real GitHub activity. Then it pulls the engagement back and learns which kinds of
+posts get reach for *your* audience.
 
-It reads your real GitHub activity, writes a post about it, publishes it through
-Buffer, then pulls the engagement numbers back and learns which kinds of posts
-work for your audience.
-
-<p>
-<img alt="cost" src="https://img.shields.io/badge/cost-%240%2Fmonth-2f6f4e">
-<img alt="deps" src="https://img.shields.io/badge/dependencies-0-2f6f4e">
-<img alt="runtime" src="https://img.shields.io/badge/node-%E2%89%A520-333">
-<img alt="runs on" src="https://img.shields.io/badge/runs%20on-GitHub%20Actions-333">
-</p>
-
-Runs entirely on GitHub Actions. **Total cost: $0.** No paid tier anywhere in the
-chain, and no credit card required at any step.
+X only. Runs on GitHub Actions, publishes through Buffer, writes with Claude.
 
 ```
-Tue 19:30 IST ─┐
-Thu 19:30 IST ─┼─→ read GitHub ─→ pick angle ─→ write 3 drafts ─→ gate them ─→ Buffer ─→ X
-Sun 15:30 IST ─┘                                                                   │
-                                             data/history.json ←── metrics ────────┘
+Mon–Fri ─→ news + research feeds ─→ Haiku triages ~40 items ─→ Opus writes 3 variants ─┐
+Friday  ─→ your GitHub commits   ─→ Haiku condenses the week ─→ Opus writes 3 variants ─┤
+                                                                                        ▼
+                               quality gate ─→ best variant ─→ Buffer (fixed time) ─→ X
+                                                                                        │
+                                     data/history.json ←── X metrics via Buffer ────────┘
 ```
+
+---
+
+## Schedule
+
+Times are chosen for the X algorithm: the first hour of engagement decides most of a
+post's reach, and developer audiences are most active on weekday mornings, US Eastern
+(research across 2026 studies: Tue–Thu 9–11 AM peaks, Sunday is ~23% below average).
+
+| Day | Post | Goes live (New York) | India (IST) |
+|---|---|---|---|
+| Mon–Fri | AI/dev news take | 10:00 AM + up to 20 min jitter | 7:30 PM (8:30 PM in winter) |
+| Fri | Weekly recap | 1:00 PM + up to 20 min jitter | 10:30 PM (11:30 PM in winter) |
+
+The workflow runs hours earlier and hands Buffer the exact publish time, so GitHub's
+cron delays (often 1–4 hours) never make a post late. Daylight saving is handled.
+Change the times in `config.json → schedule`.
 
 ---
 
 ## Why it's built this way
 
-X shut down its free API tier in February 2026. Every "free Twitter bot"
-tutorial that tells you to grab X API keys and call `POST /2/tweets` is now
-wrong — that endpoint bills per post (~$0.015, more with a link).
+- **Posting goes through Buffer.** X's posting API is paid per post. Buffer's free plan
+  posts to X and includes API access.
+- **Two Claude models.** The cheap one (Haiku 4.5) does the token-heavy reading:
+  triaging dozens of news items and condensing a week of commits. The expensive one
+  (Opus 5.5) only sees the short briefs and does the writing. On a Claude subscription
+  token this costs nothing extra; at API rates it's about $0.12 a post.
+- **No links in posts.** X shows posts with external links to fewer people, so the
+  source is named in words and the URL is kept in `history.json`.
+- **It skips rather than posts something weak.** No fresh news, no activity, or nothing
+  passes the quality gate → no post. A missed slot costs nothing; a bad post costs reach.
+- **It never invents facts.** Every claim must come from the supplied news items or your
+  commits. Opinions are allowed; fake numbers are not.
 
-The way around it: **Buffer's Free plan publishes to X using Buffer's own API
-access, and Buffer includes API access on Free** (3,000 requests/month, 100/day).
-You never touch X's API or pay X anything. This pipeline pushes ~12 requests a
-month, so you're using 0.4% of the free allowance.
-
-| Piece | Service | Free allowance | What this uses |
-|---|---|---|---|
-| Scheduler | GitHub Actions | unlimited on public repos | ~15 runs/month |
-| Activity source | GitHub REST API | 5,000 req/hr authenticated | 2 req/run |
-| Writer | Gemini API (free tier) | 1,500 req/day, no card | 1–2 req/run |
-| Trends | HN Algolia, dev.to, GitHub Search | keyless, unmetered | 3 req/run |
-| Publishing | Buffer Free | 3,000 req/month | ~3 req/run |
-| Analytics | Buffer post metrics | included on Free | ~12 req/day |
+| Piece | Service | Cost |
+|---|---|---|
+| Scheduler | GitHub Actions (public repo) | $0 |
+| Recap source | GitHub REST API | $0 |
+| News + research | Hacker News, Hugging Face papers, Simon Willison, dev.to, Lobsters, GitHub search (all keyless, read-only) | $0 |
+| Writer + worker | Claude Opus 5.5 + Haiku 4.5 via `claude setup-token` | $0 extra on a subscription |
+| Publishing + metrics | Buffer Free → X | $0 |
 
 ---
 
 ## Setup (about 15 minutes)
 
-### 1. The repo
-
-This repo is the whole system. Keep it **public** — Actions minutes are unlimited
-on public repos, and it only ever reads public GitHub data anyway.
-
-> Scheduled workflows on public repos get auto-disabled after 60 days of repo
-> inactivity. This one commits to `data/` on every run, so it keeps itself alive.
-
-### 2. Buffer
-
-1. Sign up at [buffer.com](https://buffer.com) — Free plan.
-2. Connect your X profile as a channel.
-3. **Unpause the queue** for that channel (Buffer sometimes starts paused —
-   a paused queue silently swallows everything).
-4. Go to `publish.buffer.com/settings/api`, create a **personal API key**.
-   You must be the organization owner.
-
-### 3. Gemini
-
-Get a key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey).
-Free tier, Google account only, no credit card.
-
-### 4. Repo secrets
-
-`Settings → Secrets and variables → Actions → New repository secret`:
-
-| Name | Value |
-|---|---|
-| `GEMINI_API_KEY` | from step 3 |
-| `BUFFER_API_KEY` | from step 2 |
-
-`GITHUB_TOKEN` is injected by Actions automatically — don't add it.
-
-### 5. Configure
-
-Edit **`config.json`**:
-
-```jsonc
-"github": { "username": "adityamittal-dot" }     // already set
-"identity": { "stack": [...], "handle": "yourXhandle" }  // ← add your X handle
-"schedule": { "timezone": "Asia/Calcutta" }
-```
-
-Then edit **`voice.md`**. This is the highest-leverage file in the repo — it is
-fed to the model verbatim on every run and it is what stops the output sounding
-like every other AI-written build-in-public post. Rewrite the examples in your
-own words. Ten minutes here is worth more than any code change.
-
-### 6. Verify before you let it loose
-
-```bash
-export GEMINI_API_KEY=...  BUFFER_API_KEY=...
-npm run doctor    # checks every credential, finds your X channel, warns on a paused queue
-npm run dry       # generates a real post and prints it — sends nothing
-```
-
-Run `npm run dry` five or six times. If the posts don't sound like you, fix
-`voice.md`, not the code. When they do, you're done.
-
-### 7. Go live
-
-`Actions → post → Run workflow`, set **dry_run: false**. Check Buffer — the post
-should be sitting in the queue with a publish time a few minutes out. After that
-the cron takes over.
-
----
-
-## How a run works
-
-```
-GitHub events API ─┐
-                   ├─→ activity digest (repos, commits, releases, merged PRs)
-your repo metadata ┘         │
-                             ▼
-HN + dev.to + GitHub ──→ trend context (used as a hook, never as the subject)
-                             │
-                             ▼
-              angle chosen (shipped / working-on / learned /
-              problem-solved / new-project / milestone)
-                             │
-                             ▼
-                  Gemini writes 3 different variants
-                             │
-                             ▼
-         hard gate: length, hashtags, emoji, banned phrases,
-         banned openers, placeholder leaks, similarity vs. last 20
-                             │
-                             ▼
-         soft score: measured numbers > vague claims, tight hook,
-         concrete technical nouns, no engagement bait
-                             │
-                             ▼
-                  best surviving variant → Buffer → X
-                             │
-                             ▼
-              logged to data/history.json (committed back)
-```
-
-**It skips rather than lies.** No GitHub activity in the window → no post. No
-variant passes the gate → no post. A missed slot costs nothing; a bad post costs
-you followers.
-
-**It never invents facts.** The prompt hands the model your commit subjects and
-tells it every claim must be traceable to them. Numbers in your posts are numbers
-from your commits.
-
-**The lookback is adaptive.** It looks back exactly as far as the gap since your
-last post, so a quiet week doesn't get skipped and a busy week isn't posted twice.
+1. **Buffer.** Connect your X account (only X is used). **Unpause the queue.** Create a
+   personal API key at `publish.buffer.com/settings/api`.
+2. **Claude.** Run `claude setup-token` and copy the token.
+3. **Repo secrets** (`Settings → Secrets and variables → Actions`, or with `gh`):
+   ```bash
+   gh secret set CLAUDE_CODE_OAUTH_TOKEN -R <you>/x-autopilot
+   gh secret set BUFFER_API_KEY          -R <you>/x-autopilot
+   ```
+   `GITHUB_TOKEN` is provided by Actions automatically.
+4. **`config.json`.** Set `identity.handle` to your X handle; adjust `identity.stack`
+   and `identity.interests`. These steer which news gets picked.
+5. **`voice.md` and `playbook.md`.** `voice.md` is how you sound; `playbook.md` is how
+   high-reach posts are shaped. Both are fed to the writer on every run. Rewrite the
+   examples in your own words.
+6. **Verify:**
+   ```bash
+   export BUFFER_API_KEY=...        # Claude uses your local `claude` login
+   npm run doctor                   # every credential, the X channel, the queue, publish times
+   npm run dry                      # a real news post, printed, nothing sent
+   npm run dry:recap                # a real recap, printed, nothing sent
+   ```
+7. **Go live.** `Actions → post → Run workflow` with **dry_run off**. The post should
+   appear in Buffer's X queue with a publish time set. After that the crons take over.
 
 ---
 
 ## The learning loop
 
-`metrics.yml` runs daily and pulls engagement back from Buffer into
-`data/history.json`. After a few weeks, `chooseAngle()` stops picking randomly
-and starts favouring the angles that actually perform for *your* audience,
-keeping 25% exploration so it never over-fits.
-
-Engagement is normalised per 1,000 impressions, so an early small post isn't
-buried by a later big one.
+`metrics.yml` runs daily and pulls each post's X numbers (impressions, likes, replies,
+reposts) from Buffer into `data/history.json`, along with the live post URL.
+Engagement is normalised per 1,000 impressions. Once each angle has a few posts with
+numbers, the angle picker favours what works for your audience, keeping 25% exploration.
 
 ```bash
-npm run metrics   # pull latest numbers
-npm run report    # writes data/report.html — open it in a browser
+npm run metrics   # pull the latest X numbers
+npm run report    # data/report.html: best angles, best slots, every post with a link to X
 ```
 
-The report shows which angle wins, which time slot wins, and every post with its
-numbers. It's also uploaded as a workflow artifact on every metrics run.
+Follower growth isn't exposed by any free API; check analytics.x.com.
 
-For follower growth specifically, X's own free dashboard at
-[analytics.x.com](https://analytics.x.com) stays the source of truth — no free
-API exposes follower counts anymore.
+**The part automation can't do:** reply to every reply in the first hour after a post
+goes live. The algorithm weights author replies heavily.
 
 ---
 
@@ -188,75 +112,56 @@ API exposes follower counts anymore.
 
 | I want... | Change |
 |---|---|
-| Different days/times | `cron` lines in `.github/workflows/post.yml` (UTC) |
-| More or fewer posts | add/remove `cron` lines |
-| Different mix of post types | `content.angles[].weight` in `config.json` |
-| No links in posts | `content.linkPolicy: "none"` (X does suppress reach on posts with links) |
-| Stricter or looser filtering | `quality.*` in `config.json` |
-| A repo kept out of posts | `github.excludeRepos` |
-| Different model | `llm.models` — it tries each in order and falls through on failure |
+| Different publish times | `schedule.publishAt` + `schedule.audienceTimezone` |
+| Different days | `cron` lines in `.github/workflows/post.yml` (keep them hours before publish time) |
+| Different mix of post styles | `formats.<type>.angles[].weight` |
+| Different news sources or topics | `news.sources`, `news.hnQueries`, `news.devtoTags` |
+| Longer posts (X Premium) | `formats.<type>.maxChars` and `maxLines` |
+| A different writer or worker model | `llm.claude.model`, `llm.worker.model`, `llm.claude.effort` |
+| Stricter or looser filtering | `quality.*` |
 | Posts to sound different | **`voice.md`** |
-
-### Things that will eventually break, and how they're handled
-
-- **A Gemini model gets deprecated.** `llm.models` is a fallback chain; it walks
-  down the list. Add the new model name at the top when one ships.
-- **Your GitHub token 401s.** Falls back to the unauthenticated public API.
-- **A trend source goes down.** Each is caught independently; the run continues.
-- **Gemini has a bad day.** Two attempts at a lower temperature, then a
-  deterministic template fallback, then skip.
-- **Buffer's queue is paused.** `npm run doctor` warns you; the run logs it.
-
----
-
-## Honest limitations
-
-- **Buffer Free holds 10 queued posts per channel.** At 3/week you'll never come
-  close, but don't also queue 10 by hand.
-- **Threads aren't supported on Buffer Free.** These are single posts by design.
-- **Metrics come from Buffer, not X directly.** They're accurate but arrive on
-  Buffer's refresh cadence, not instantly.
-- **You still have to reply to people.** Automation gets you consistent output;
-  it does not get you an audience on its own. The posts are the top of the
-  funnel — the conversations under them are the actual growth.
+| Posts to be shaped differently | **`playbook.md`** |
 
 ---
 
 ## Commands
 
 ```bash
-npm run doctor    # verify every credential and connection
-npm run dry       # generate and print a post, send nothing
-npm run post      # generate and schedule for real
-npm run metrics   # pull engagement from Buffer
-npm run report    # rebuild data/report.html
+npm run doctor      # verify every credential and connection
+npm run dry         # generate and print a news post, send nothing
+npm run dry:recap   # generate and print the weekly recap, send nothing
+npm run post        # generate and schedule for real (POST_TYPE=insight|recap)
+npm run metrics     # pull X engagement via Buffer
+npm run report      # rebuild data/report.html
 ```
 
-No dependencies. Node 20+. `npm install` isn't needed.
+No npm dependencies. Node 20+ and the Claude Code CLI (`npm i -g @anthropic-ai/claude-code`).
 
 ---
 
 ## Layout
 
 ```
-config.json              every knob except the writing itself
-voice.md                 the writing itself — edit this first
+config.json              every knob except the writing
+voice.md                 how you sound
+playbook.md              how reach-focused X posts are shaped
 src/
-  main.js                the run: collect → choose → generate → gate → publish
-  sources/github.js      your events feed → a clean activity digest
-  sources/trends.js      Hacker News + dev.to + GitHub Search, scored for relevance
-  generate.js            Gemini call, model fallback chain, template fallback
+  main.js                one run: collect → prep → write → gate → Buffer
+  sources/news.js        AI/dev news + research feeds, ranked for reach and stack fit
+  sources/github.js      your week of commits, PRs and releases
+  prep.js                cheap worker model: news triage, commit condensing
+  llm.js                 Claude CLI (writer + worker roles), Gemini fallback
+  generate.js            writer prompts for news posts and the weekly recap
   quality.js             hard gate + soft scoring
   scheduler.js           angle selection, epsilon-greedy over past engagement
   publish/buffer.js      Buffer GraphQL: channels, createPost, metrics
-  metrics.js             daily engagement sync
+  metrics.js             daily X engagement sync
   store.js               data/history.json
 scripts/
   doctor.js              verify every credential and connection
   report.js              build data/report.html
-data/history.json        every post, with its numbers. the memory of the system.
 ```
 
 ## License
 
-MIT. Do whatever you want with it.
+MIT.

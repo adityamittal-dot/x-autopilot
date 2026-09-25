@@ -4,7 +4,8 @@
     "excludeRepos": [
       "dotfiles",
       "config",
-      "PROJECTS-101"
+      "PROJECTS-101",
+      "x-autopilot"
     ],
     "excludeCommitPatterns": [
       "^merge ",
@@ -19,6 +20,8 @@
       "^typo",
       "^bump ",
       "^chore\\(deps\\)",
+      "^chore: sync metrics",
+      "^chore: log post",
       "^\\.$",
       "^test$",
       "^cleanup$",
@@ -27,9 +30,6 @@
       "^rename",
       "^revert "
     ],
-    "lookbackDays": 7,
-    "minLookbackDays": 3,
-    "maxLookbackDays": 21,
     "maxRepos": 4
   },
   "identity": {
@@ -45,67 +45,134 @@
       "Node.js"
     ],
     "interests": [
+      "LLM",
+      "AI agents",
+      "coding agents",
       "static analysis",
       "developer tools",
       "code visualization",
       "full-stack",
+      "open source models",
       "web performance",
       "deploying things"
     ],
-    "handle": ""
+    "handle": "AdityaMittal87"
   },
   "schedule": {
-    "timezone": "Asia/Calcutta",
-    "postsPerWeek": 3,
-    "publishDelayMinutes": 5,
-    "jitterMinutes": 45
+    "audienceTimezone": "America/New_York",
+    "publishAt": {
+      "insight": "10:00",
+      "recap": "13:00"
+    },
+    "jitterMinutes": 20,
+    "minLeadMinutes": 5
   },
-  "content": {
-    "pillar": "buildInPublic",
-    "angles": [
-      {
-        "id": "shipped",
-        "weight": 3,
-        "brief": "Something you finished and pushed. Lead with the outcome, not the process."
-      },
-      {
-        "id": "working-on",
-        "weight": 3,
-        "brief": "What you are mid-way through right now. Show the actual problem you are chewing on."
-      },
-      {
-        "id": "learned",
-        "weight": 2,
-        "brief": "One concrete thing this week's code taught you. A gotcha, a pattern, a wrong assumption."
-      },
-      {
-        "id": "problem-solved",
-        "weight": 2,
-        "brief": "A bug or bottleneck you hit and how you got past it. Name the symptom before the fix."
-      },
-      {
-        "id": "new-project",
-        "weight": 2,
-        "brief": "A repo you just started. What it does and why you started it. Only if a new repo appeared."
-      },
-      {
-        "id": "milestone",
-        "weight": 1,
-        "brief": "A number that moved: a release, stars, a feature count, a rewrite finished."
-      }
+  "formats": {
+    "insight": {
+      "maxChars": 275,
+      "maxLines": 6,
+      "angles": [
+        {
+          "id": "take",
+          "weight": 3,
+          "brief": "A clear, defensible opinion on ONE news item, grounded in what it changes for developers who ship. State the take in the first line."
+        },
+        {
+          "id": "what-it-means",
+          "weight": 3,
+          "brief": "What ONE release, tool, or paper actually changes, in plain words, for someone building real apps. Lead with the consequence, not the announcement."
+        },
+        {
+          "id": "paper-plain",
+          "weight": 2,
+          "brief": "ONE research paper from the list: its core finding in one sentence a working dev understands, then why it matters in practice. Only if a research item is in the list."
+        },
+        {
+          "id": "stack-angle",
+          "weight": 2,
+          "brief": "Connect ONE news item to full-stack work in the dev's stack (Django, Next.js, Postgres, Docker): what it changes or what to watch for."
+        },
+        {
+          "id": "roundup",
+          "weight": 1,
+          "brief": "A one-line hook, then exactly three items from the list that matter to builders, one short line each. No numbering emoji."
+        }
+      ]
+    },
+    "recap": {
+      "maxChars": 275,
+      "maxLines": 7,
+      "lookbackDays": 7,
+      "angles": [
+        {
+          "id": "recap-lesson-led",
+          "weight": 3,
+          "brief": "Open with the single most useful thing learned this week, then what shipped, then what is next."
+        },
+        {
+          "id": "recap-shipped-led",
+          "weight": 3,
+          "brief": "Open with the most concrete thing shipped this week, then the lesson it taught, then what is being worked on now."
+        },
+        {
+          "id": "recap-bullets",
+          "weight": 2,
+          "brief": "A one-line hook about the week, then three short lines: something learned, something shipped, something in progress."
+        }
+      ]
+    }
+  },
+  "news": {
+    "lookbackHours": 72,
+    "maxItems": 40,
+    "briefs": 6,
+    "minItems": 4,
+    "hnQueries": [
+      "AI",
+      "LLM",
+      "OpenAI",
+      "Anthropic",
+      "Claude",
+      "Gemini",
+      "agents",
+      "open source model"
     ],
-    "maxChars": 275,
-    "linkPolicy": "inline",
-    "useTrendHook": true
+    "hnMinPoints": 60,
+    "devtoTags": [
+      "ai",
+      "llm"
+    ],
+    "githubTopic": "llm",
+    "sources": {
+      "hackernews": true,
+      "huggingface": true,
+      "simonwillison": true,
+      "devto": true,
+      "lobsters": true,
+      "githubRising": true
+    },
+    "avoidRepeatWindow": 30
   },
   "llm": {
-    "models": [
-      "gemini-3-flash",
-      "gemini-3.1-flash-lite",
-      "gemini-2.5-flash",
-      "gemini-2.0-flash"
-    ],
-    "temperature": 1.0,
+    "provider": "claude",
+    "claude": {
+      "model": "claude-opus-5-5",
+      "effort": "medium",
+      "timeoutSeconds": 300
+    },
+    "worker": {
+      "model": "claude-haiku-4-5",
+      "thinking": false,
+      "timeoutSeconds": 180
+    },
+    "gemini": {
+      "models": [
+        "gemini-3-flash",
+        "gemini-3.1-flash-lite",
+        "gemini-2.5-flash"
+      ],
+      "temperature": 1
+    },
     "variants": 3
   },
   "quality": {
@@ -132,28 +199,23 @@
       "i'm an ai",
       "here's the thing:",
       "little did i know",
-      "\ud83d\ude80\ud83d\ude80",
+      "a thread",
+      "🧵",
+      "🚀🚀",
       "!!!",
       "#buildinpublic #100daysofcode"
     ],
     "bannedOpeners": [
       "just ",
       "so ",
-      "today i "
+      "today i ",
+      "breaking:",
+      "big news"
     ]
   },
   "buffer": {
     "channelService": "twitter",
-    "channelId": ""
-  },
-  "trends": {
-    "enabled": true,
-    "sources": {
-      "hackernews": true,
-      "devto": true,
-      "githubSearch": true
-    },
-    "maxItems": 8
+    "channelId": "6aaebf91ea19ca0bde8a0cc1"
   },
   "learning": {
     "enabled": true,

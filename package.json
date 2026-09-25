@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Free, self-hosted build-in-public autopilot for X. GitHub activity -> Gemini -> Buffer.",
+  "description": "Reach-focused autopilot for X: AI/dev news posts and a weekly build-in-public recap, written by Claude, published via Buffer.",
   "engines": { "node": ">=20" },
   "scripts": {
     "post": "node src/main.js",
-    "dry": "node src/main.js --dry-run",
+    "dry": "node src/main.js --dry-run --type insight",
+    "dry:recap": "node src/main.js --dry-run --type recap",
     "metrics": "node src/metrics.js",
     "doctor": "node scripts/doctor.js",
     "report": "node scripts/report.js"
