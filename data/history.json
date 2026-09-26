@@ -17,8 +17,18 @@
       "sourceUrls": [],
       "charCount": 254,
       "qualityScore": 46,
-      "metrics": null,
-      "metricsUpdatedAt": null
+      "metrics": {
+        "reactions": 0,
+        "comments": 0,
+        "engagementRate": 0,
+        "reposts": 0,
+        "impressions": 0,
+        "clicks": 0
+      },
+      "metricsUpdatedAt": "2026-09-26T08:37:19.389Z",
+      "status": "sent",
+      "sentAt": "2026-09-25T17:12:01.118Z",
+      "url": "https://x.com/1687093333124845568/status/2103532988830978148"
     }
   ]
 }
