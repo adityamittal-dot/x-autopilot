@@ -29,6 +29,48 @@
       "status": "sent",
       "sentAt": "2026-09-25T17:12:01.118Z",
       "url": "https://x.com/1687093333124845568/status/2103532988830978148"
+    },
+    {
+      "id": "6aba57283987406061cbff45",
+      "type": "insight",
+      "slot": "morning",
+      "slotDay": "2026-09-28",
+      "text": "Your agent's tool schemas are an API. Version them like one.\n\nA dev.to writeup changed one tool's schema four ways and watched three agent frameworks break differently, across 36 runs.\n\nIf agents call your tools, a renamed field is a breaking change.",
+      "angle": "builder-take",
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-09-28T12:01:44.612Z",
+      "dueAt": "2026-09-28T13:43:00.000Z",
+      "localSlot": "Mon-09",
+      "repos": [],
+      "sourceUrls": [
+        "https://dev.to/sunnydachs/i-changed-a-tools-schema-four-ways-and-watched-three-agent-frameworks-break-differently-36-runs-ebk"
+      ],
+      "charCount": 250,
+      "qualityScore": 54,
+      "metrics": null,
+      "metricsUpdatedAt": null
+    },
+    {
+      "id": "6aba5750c89b4e66c43a5cd8",
+      "type": "insight",
+      "slot": "midday",
+      "slotDay": "2026-09-28",
+      "text": "The hidden costs of shipping AI showed up this week.\nHN is dissecting how OpenAI agents hacked Hugging Face.\nA finance company's customer-facing agent got prompt-injected.\nBlue Cross Blue Shield says hospital AI tools added $942M in spend over two years.",
+      "angle": "roundup",
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-09-28T12:02:24.905Z",
+      "dueAt": "2026-09-28T17:05:00.000Z",
+      "localSlot": "Mon-13",
+      "repos": [],
+      "sourceUrls": [
+        "https://swarmtraces.org/",
+        "https://dev.to/james_anderson_h/prompt-injection-is-the-new-sql-injection-and-were-not-ready-4ea4",
+        "https://techcrunch.com/2026/09/26/insurers-claim-ai-is-already-increasing-healthcare-costs/"
+      ],
+      "charCount": 254,
+      "qualityScore": 54,
+      "metrics": null,
+      "metricsUpdatedAt": null
     }
   ]
 }
