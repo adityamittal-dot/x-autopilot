@@ -121,6 +121,46 @@
       "status": "sent",
       "sentAt": "2026-09-28T21:47:00.975Z",
       "url": "https://x.com/1687093333124845568/status/2104689357726601398"
+    },
+    {
+      "id": "6abba2ae46f083f6cb6352ac",
+      "type": "insight",
+      "slot": "morning",
+      "slotDay": "2026-09-29",
+      "text": "The money in AI right now is in running models, not wrapping them.\n\nTechCrunch: inference provider Modal Labs is closing in on $750M at a $15.75B valuation, more than triple what it was four months ago.\n\nIf inference is your biggest line item, you're funding that.",
+      "angle": "builder-take",
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-09-29T11:36:14.922Z",
+      "dueAt": "2026-09-29T13:38:00.000Z",
+      "localSlot": "Tue-09",
+      "repos": [],
+      "sourceUrls": [
+        "https://techcrunch.com/2026/09/28/source-inference-provider-modal-labs-closing-in-on-750m-round-at-15-75b-valuation/"
+      ],
+      "charCount": 264,
+      "qualityScore": 62,
+      "metrics": null,
+      "metricsUpdatedAt": null
+    },
+    {
+      "id": "6abba2c838ec49fa79452b2b",
+      "type": "insight",
+      "slot": "midday",
+      "slotDay": "2026-09-29",
+      "text": "An agent that's mostly if-statements isn't a failure.\n\nA dev.to post argues half the agents in production are if-statements with a GPU bill, a new kind of tech debt.\n\nI'd keep the if-statements. The debt is routing them through a model.",
+      "angle": "contrarian",
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-09-29T11:36:40.190Z",
+      "dueAt": "2026-09-29T17:18:00.000Z",
+      "localSlot": "Tue-13",
+      "repos": [],
+      "sourceUrls": [
+        "https://dev.to/cyclopt_dimitrisk/half-the-ai-agents-in-production-are-if-statements-with-a-gpu-bill-4934"
+      ],
+      "charCount": 236,
+      "qualityScore": 44,
+      "metrics": null,
+      "metricsUpdatedAt": null
     }
   ]
 }
