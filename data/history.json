@@ -25,7 +25,7 @@
         "impressions": 0,
         "clicks": 0
       },
-      "metricsUpdatedAt": "2026-09-28T09:48:22.558Z",
+      "metricsUpdatedAt": "2026-09-29T09:51:02.886Z",
       "status": "sent",
       "sentAt": "2026-09-25T17:12:01.118Z",
       "url": "https://x.com/1687093333124845568/status/2103532988830978148"
@@ -47,8 +47,18 @@
       ],
       "charCount": 250,
       "qualityScore": 54,
-      "metrics": null,
-      "metricsUpdatedAt": null
+      "metrics": {
+        "reactions": 0,
+        "comments": 0,
+        "engagementRate": 0,
+        "reposts": 0,
+        "impressions": 0,
+        "clicks": 0
+      },
+      "metricsUpdatedAt": "2026-09-29T09:51:04.844Z",
+      "status": "sent",
+      "sentAt": "2026-09-28T13:43:02.100Z",
+      "url": "https://x.com/1687093333124845568/status/2104567559785693357"
     },
     {
       "id": "6aba5750c89b4e66c43a5cd8",
@@ -69,8 +79,18 @@
       ],
       "charCount": 254,
       "qualityScore": 54,
-      "metrics": null,
-      "metricsUpdatedAt": null
+      "metrics": {
+        "reactions": 0,
+        "comments": 0,
+        "engagementRate": 0,
+        "reposts": 0,
+        "impressions": 1,
+        "clicks": 0
+      },
+      "metricsUpdatedAt": "2026-09-29T09:51:06.464Z",
+      "status": "sent",
+      "sentAt": "2026-09-28T17:05:02.013Z",
+      "url": "https://x.com/1687093333124845568/status/2104618394192355790"
     },
     {
       "id": "6abaa6850b9d13a08baafbd7",
@@ -89,8 +109,18 @@
       ],
       "charCount": 245,
       "qualityScore": 48,
-      "metrics": null,
-      "metricsUpdatedAt": null
+      "metrics": {
+        "reactions": 0,
+        "comments": 0,
+        "engagementRate": 0,
+        "reposts": 0,
+        "impressions": 1,
+        "clicks": 0
+      },
+      "metricsUpdatedAt": "2026-09-29T09:51:08.091Z",
+      "status": "sent",
+      "sentAt": "2026-09-28T21:47:00.975Z",
+      "url": "https://x.com/1687093333124845568/status/2104689357726601398"
     }
   ]
 }
