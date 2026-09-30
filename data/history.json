@@ -252,6 +252,26 @@
       "qualityScore": 42,
       "metrics": null,
       "metricsUpdatedAt": null
+    },
+    {
+      "id": "6abd3123f47c0fef970850a6",
+      "type": "insight",
+      "slot": "evening",
+      "slotDay": "2026-09-30",
+      "text": "Agent money is flowing to the boring layer.\n\nTechCrunch: Restate raised $20M for durable workflow infra for AI agents, up against Temporal.\n\nAgents that run for hours need state that survives a crash. That's the part nobody can skip paying for.",
+      "angle": "business-of-ai",
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-09-30T15:56:19.321Z",
+      "dueAt": "2026-09-30T21:37:00.000Z",
+      "localSlot": "Wed-17",
+      "repos": [],
+      "sourceUrls": [
+        "https://techcrunch.com/2026/09/30/restate-lands-20m-as-the-need-for-durable-infrastructure-increases-with-ai-agents/"
+      ],
+      "charCount": 244,
+      "qualityScore": 58,
+      "metrics": null,
+      "metricsUpdatedAt": null
     }
   ]
 }
