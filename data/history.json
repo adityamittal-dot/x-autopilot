@@ -211,6 +211,47 @@
       "status": "sent",
       "sentAt": "2026-09-29T21:30:08.805Z",
       "url": "https://x.com/1687093333124845568/status/2105047499513692385"
+    },
+    {
+      "id": "6abcf13e0cbb1c593b788eaa",
+      "type": "insight",
+      "slot": "morning",
+      "slotDay": "2026-09-30",
+      "text": "If agents can discover your software, your API is the storefront.\n\nTechCrunch: OpenAI wants ChatGPT to be where software gets found and used, by people and AI agents alike.\n\nIndie devs without clean endpoints and docs are invisible there.",
+      "angle": "builder-take",
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-09-30T11:23:42.731Z",
+      "dueAt": "2026-09-30T13:40:00.000Z",
+      "localSlot": "Wed-09",
+      "repos": [],
+      "sourceUrls": [
+        "https://techcrunch.com/2026/09/29/openais-latest-features-take-direct-aim-at-the-app-store-model/"
+      ],
+      "charCount": 238,
+      "qualityScore": 40,
+      "metrics": null,
+      "metricsUpdatedAt": null
+    },
+    {
+      "id": "6abcf155a36a29488a239402",
+      "type": "bip",
+      "slot": "midday",
+      "slotDay": "2026-09-30",
+      "text": "lorevid now writes 9 Shorts a day instead of 7.\n\nEvery extra slot went to One Piece: 7 One Piece, 1 Naruto, 1 JJK. I added a quality bar in the same change.\n\nI'm leaning hard on one series instead of spreading out. Still watching whether that holds up.",
+      "angle": "decision",
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-09-30T11:24:05.708Z",
+      "dueAt": "2026-09-30T17:07:00.000Z",
+      "localSlot": "Wed-13",
+      "repos": [
+        "adityamittal-dot/lorevid",
+        "adityamittal-dot/Portfolio"
+      ],
+      "sourceUrls": [],
+      "charCount": 252,
+      "qualityScore": 42,
+      "metrics": null,
+      "metricsUpdatedAt": null
     }
   ]
 }
