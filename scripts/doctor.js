@@ -20,9 +20,10 @@ for (const slot of cfg.schedule.slots) {
   const at = zonedTime(inZone(new Date(), tz).date, slot.at, tz);
   const ist = at.toLocaleTimeString('en-GB', { timeZone: 'Asia/Calcutta', hour: '2-digit', minute: '2-digit' });
   const types = [slot.type, ...Object.entries(slot.byWeekday || {}).map(([d, t]) => `${t} on ${d}`)].join(', ');
-  ok(`${slot.id} slot goes live ${slot.at} ${tz} (today: ${at.toISOString().slice(11, 16)} UTC, ${ist} IST) — ${types}`);
+  const days = (slot.days || []).join(' ') || 'every day';
+  const fallback = slot.fallback ? `, fallback: ${slot.fallback}` : '';
+  ok(`${slot.id} slot goes live ${slot.at} ${tz} (today: ${at.toISOString().slice(11, 16)} UTC, ${ist} IST) — ${types} — days: ${days}${fallback}`);
 }
-note(`posting days: ${(cfg.schedule.days || []).join(' ') || 'every day'}`);
 
 console.log('\nGitHub (recap source)');
 try {

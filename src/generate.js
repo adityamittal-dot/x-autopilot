@@ -6,12 +6,15 @@ const today = () => new Date().toISOString().slice(0, 10);
 
 function sharedRules(cfg, fmt) {
   return `=== HARD CONSTRAINTS ===
-- Maximum ${fmt.maxChars} characters. Target 180-260. At most ${fmt.maxLines} lines.
+- Maximum ${fmt.maxChars} characters (hard cap). Target 80-220 — casual and short wins on X.
+  At most ${fmt.maxLines} lines.
+- Casual, short, lowercase-is-fine tone. No press-release voice, no corporate polish.
 - No URLs. X suppresses reach on posts with links. Name the source in words instead.
 - At most ${cfg.quality.maxHashtags} hashtag and ${cfg.quality.maxEmoji} emoji. Zero is usually right.
 - Do not start with: ${(cfg.quality.bannedOpeners || []).map((o) => `"${o.trim()}"`).join(', ')}.
 - No engagement bait, no "thoughts?", no calls to action, no thread markers.
 - Write as the developer ("I" where natural), never about them.
+- A detached, neutral restatement of the news is the worst-performing format on X. Take a side.
 
 === WHAT REACH MEANS HERE ===
 X ranks a reply ~27x a like and a bookmark ~20x; a mute or "show less" costs more
@@ -20,11 +23,12 @@ disagree with, or a real specific question) or a bookmark (specifics worth keepi
 Never beg for either, and never rage-bait.`;
 }
 
-function outputSpec(cfg, withSources) {
+function outputSpec(cfg, withSources, { evidence = false } = {}) {
   const src = withSources ? ',"sources":["the url(s) of the item(s) this variant is about"]' : '';
+  const ev = evidence ? ',"evidence":["the exact commit subject(s) this variant is based on"]' : '';
   return `=== OUTPUT ===
 Return ONLY a JSON object, no prose, no code fence:
-{"variants":[{"text":"...","why":"one clause on why this will get reach"${src}}, ...]}
+{"variants":[{"text":"...","why":"one clause on why this will get reach"${src}${ev}}, ...]}
 Give exactly ${cfg.llm.variants} genuinely different variants: different hook, different
 item or fact chosen, different shape. Not rewordings of one sentence.`;
 }
@@ -76,6 +80,8 @@ ${sharedRules(cfg, fmt)}
 - Every factual claim must come from the news block above. Do not add numbers, names,
   benchmarks, dates, or features that are not there. Opinions are fine; fake facts are not.
 - Never claim the developer used, tested, or benchmarked something. They read about it.
+- This must be a first-person opinion or reaction, never a neutral summary of the news.
+  The take leads; the fact from the item backs it up.
 
 ${outputSpec(cfg, true)}`;
 }
@@ -114,7 +120,7 @@ ${sharedRules(cfg, fmt)}
   or results that are not there. If the commits don't show the outcome, don't claim one.
 - Refer to projects by name. No repo URLs.
 
-${outputSpec(cfg, false)}`;
+${outputSpec(cfg, false, { evidence: true })}`;
 }
 
 /** Weekly post: what I learned, what I shipped, what I'm on, from real GitHub activity. */
@@ -150,6 +156,121 @@ ${sharedRules(cfg, fmt)}
 ${outputSpec(cfg, false)}`;
 }
 
+/** Bookmarkable practical tip from the author's own stack, shaped by the angle. */
+export function buildTipPrompt({ cfg, voice, playbook, topic, angle, recent }) {
+  const fmt = cfg.formats.tip;
+  return `You write one X post for a developer's account: a bookmarkable practical tip
+from the author's own stack. The goal is reach: a tip specific enough that another
+developer saves it and tries it themselves.
+
+Today is ${today()}.
+
+=== VOICE GUIDE (how this person sounds) ===
+${voice}
+
+=== REACH PLAYBOOK (how high-reach dev posts on X are shaped) ===
+${playbook}
+
+${authorBlock(cfg)}
+
+=== TOPIC FOR THIS POST ===
+${topic}
+
+=== THE ANGLE FOR THIS POST ===
+${angle.id}: ${angle.brief}
+
+=== POSTS ALREADY PUBLISHED (do not repeat these ideas or their phrasing) ===
+${recentBlock(recent)}
+
+${sharedRules(cfg, fmt)}
+- Only long-stable, well-documented behavior you are certain of. No version numbers,
+  release dates, or benchmark figures — those go stale and age a post badly. If you
+  are not sure a detail is exactly right, pick a different tip instead of guessing.
+- Name the real function, flag, class, or setting by name. Inline backticks are fine.
+- This is not a beginner tip — assume the reader already knows the basics of the topic.
+- Never claim this happened to the developer. No "I learned today", no invented story
+  or timeline. State the tip directly, as a fact about the topic.
+
+${outputSpec(cfg, false)}`;
+}
+
+/** Genuine question to the timeline: the highest-leverage reach format (an author reply-back is worth ~150x a like). */
+export function buildQuestionPrompt({ cfg, voice, playbook, news, topic, angle, recent }) {
+  const fmt = cfg.formats.question;
+  const hasNewsBlock = angle.id !== 'stack-tradeoff' && news.length > 0;
+  return `You write one X post for a developer's account: a genuine question to the
+timeline. The goal is reach: X ranks a reply ~27x a like, and an author reply-back on
+a question is worth roughly ~150x a like — this is the single highest-leverage format.
+
+Today is ${today()}.
+
+=== VOICE GUIDE (how this person sounds) ===
+${voice}
+
+=== REACH PLAYBOOK (how high-reach dev posts on X are shaped) ===
+${playbook}
+
+${authorBlock(cfg)}
+${hasNewsBlock ? `
+=== LATEST AI, DEV, AND STARTUP NEWS AND RESEARCH (pre-screened; the only facts you may use) ===
+${renderNews(news)}
+` : ''}
+=== STACK TOPIC FOR THIS POST ===
+${topic}
+
+=== THE ANGLE FOR THIS POST ===
+${angle.id}: ${angle.brief}
+
+=== POSTS ALREADY PUBLISHED (do not repeat these ideas or their phrasing) ===
+${recentBlock(recent)}
+
+${sharedRules(cfg, fmt)}
+- The question must be specific enough to answer with a real experience or a concrete
+  choice. Bad: "What do you think about AI agents?" Good: "Where do you draw the line
+  between a background job and an agent loop?"
+- State the author's own lean first, in one line, so it reads as a conversation, not a
+  poll — then ask the question.
+- Exactly one question. The post ends with "?".
+- No "thoughts?", "agree?", "who else", or any other engagement-bait phrasing.
+${hasNewsBlock ? '- Any news fact you use must come from the news block above. Never invent one.\n' : ''}- Never invent a personal experience the author hasn't had.
+
+${outputSpec(cfg, hasNewsBlock)}`;
+}
+
+/** One short, relatable observation: the kind of post dev Twitter replies to and reposts because it's exactly right. */
+export function buildObservationPrompt({ cfg, voice, playbook, angle, recent }) {
+  const fmt = cfg.formats.observation;
+  return `You write one X post for a developer's account: one short, relatable
+observation about building software or working with AI tools. The goal is reach: the
+kind of post dev Twitter replies to ("lol yes") and reposts because it's exactly right,
+not because it's a joke.
+
+Today is ${today()}.
+
+=== VOICE GUIDE (how this person sounds) ===
+${voice}
+
+=== REACH PLAYBOOK (how high-reach dev posts on X are shaped) ===
+${playbook}
+
+${authorBlock(cfg)}
+
+=== THE ANGLE FOR THIS POST ===
+${angle.id}: ${angle.brief}
+
+=== POSTS ALREADY PUBLISHED (do not repeat these ideas or their phrasing) ===
+${recentBlock(recent)}
+
+${sharedRules(cfg, fmt)}
+- One to three lines. Dry and specific — something a developer instantly recognizes.
+- Not a joke template ("nobody: ... me: ..."), not motivational, not a hot take dressed
+  up as an observation.
+- Never invent a personal event, a number, or an offer. No news facts here at all —
+  this is not about anything in the news.
+
+${outputSpec(cfg, false)}`;
+}
+
 export async function generateVariants(prompt, cfg) {
   const { model, parsed } = await generateJSON(prompt, cfg);
   const variants = (parsed?.variants || [])
@@ -157,6 +278,7 @@ export async function generateVariants(prompt, cfg) {
       text: String(v.text || '').trim(),
       why: v.why || '',
       sources: Array.isArray(v.sources) ? v.sources.filter((s) => typeof s === 'string') : [],
+      evidence: Array.isArray(v.evidence) ? v.evidence.filter((s) => typeof s === 'string') : [],
     }))
     .filter((v) => v.text);
   if (!variants.length) throw new Error('no variants in response');

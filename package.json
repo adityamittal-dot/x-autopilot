@@ -12,6 +12,9 @@
     "dry": "node src/main.js --dry-run --type insight",
     "dry:bip": "node src/main.js --dry-run --type bip",
     "dry:recap": "node src/main.js --dry-run --type recap",
+    "dry:tip": "node src/main.js --dry-run --type tip",
+    "dry:question": "node src/main.js --dry-run --type question",
+    "dry:observation": "node src/main.js --dry-run --type observation",
     "metrics": "node src/metrics.js",
     "doctor": "node scripts/doctor.js",
     "report": "node scripts/report.js"

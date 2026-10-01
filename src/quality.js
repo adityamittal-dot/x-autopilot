@@ -43,7 +43,7 @@ export function score(text, cfg, fmt = {}) {
   let s = 0;
 
   const len = t.length;
-  s += len >= 160 && len <= 265 ? 12 : len >= 110 ? 6 : 0;      // sweet spot
+  s += len >= 80 && len <= 220 ? 12 : len >= 40 && len <= 79 ? 6 : len >= 221 ? 4 : 0;  // sweet spot: short and casual wins
 
   if (/\b\d+(\.\d+)?\s*(ms|s|kb|mb|x|%|k)\b|\$\d/i.test(t)) s += 14;  // measured claim or a price
   else if (/\b\d+\b/.test(t)) s += 6;                            // any number
