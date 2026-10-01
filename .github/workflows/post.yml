@@ -4,18 +4,35 @@ on:
   schedule:
     # Times are UTC. Each run writes every slot that is due (config.json → schedule.slots)
     # and hands Buffer a fixed publish time, so GitHub's cron delays (often hours) don't
-    # make posts late. A slot opens writeAheadHours before its time; a run that GitHub
-    # drops or delays is caught up by the next one, and a filled slot is never redone.
-    - cron: '45 5 * * 1-5'   # morning slot  → goes live 09:30 New York
-    - cron: '15 9 * * 1-5'   # midday slot   → 13:00 New York (Wed: build-in-public, Fri: weekly recap)
-    - cron: '45 13 * * 1-5'  # evening slot  → 17:30 New York
-    - cron: '45 17 * * 1-5'  # catch-up: fills any slot a dropped run missed
+    # make posts late. A slot opens writeAheadHours (9h) before its time and stays open
+    # until skipIfLateHours (2h) after it; a run that GitHub drops or delays is caught up
+    # by the next one, and a filled slot is never redone.
+    #
+    # Slots (America/New_York): weekdays 08:30, 11:00, 13:30, 16:00, 19:00 — weekends
+    # 10:00, 13:30, 17:00. Five runs a day, every day (cron needs no DST awareness: the
+    # same five UTC times cover both EDT and EST — see the table below).
+    #
+    #   run (UTC)   | covers (EDT, UTC-4)        | covers (EST, UTC-5)
+    #   05:00       | 08:30 slot (7.5h ahead)    | 08:30 slot (8.5h ahead)
+    #   08:30       | 11:00, 13:30 slots         | 08:30, 11:00 slots
+    #   12:30       | 13:30, 16:00, 10:00(wk)    | 11:00, 13:30, 16:00, 10:00(wk)
+    #   16:00       | 16:00, 19:00, 17:00(wk)    | 13:30, 16:00, 19:00, 17:00(wk)
+    #   19:30       | 19:00 slot (catch-up)      | 19:00, 17:00(wk) (catch-up)
+    #
+    # Every slot, in both offsets, lands inside at least two of these runs' write-ahead
+    # windows, with the first of them several hours before the slot (checked by simulating
+    # a full EDT week and a full EST week against dueSlots).
+    - cron: '0 5 * * *'
+    - cron: '30 8 * * *'
+    - cron: '30 12 * * *'
+    - cron: '0 16 * * *'
+    - cron: '30 19 * * *'
   workflow_dispatch:
     inputs:
       type:
         description: 'auto = fill the slots due now; a type = one post of that type, live in a few minutes'
         type: choice
-        options: [auto, insight, bip, recap]
+        options: [auto, insight, bip, recap, tip, question, observation]
         default: auto
       dry_run:
         description: 'Generate and print without sending to Buffer'

@@ -13,9 +13,11 @@ export function dueSlots(cfg, history, now = new Date()) {
   const today = inZone(now, tz);
   if (s.days && !s.days.includes(today.weekday)) return [];
   return s.slots
+    .filter((slot) => !slot.days || slot.days.includes(today.weekday))
     .map((slot) => ({
       id: slot.id,
       type: slot.byWeekday?.[today.weekday] || slot.type,
+      fallback: slot.fallback || null,
       day: today.date,
       at: zonedTime(today.date, slot.at, tz),
     }))
@@ -92,7 +94,22 @@ function isEligible(angle, { news }) {
   if (angle.id === 'paper-plain') return (news || []).some((n) => n.kind === 'research');
   if (angle.id === 'business-of-ai') return (news || []).some((n) => n.kind === 'business' || BUSINESS.test(`${n.title} ${n.summary}`));
   if (angle.id === 'roundup') return (news || []).length >= 6;
+  if (angle.id === 'news-question') return (news || []).length >= 3;
   return true;
+}
+
+/** The stack topic posted about least recently, so tips and tradeoff questions rotate through the whole stack. */
+export function chooseTopic(cfg, history) {
+  const topics = cfg.formats.tip?.topics || [];
+  if (!topics.length) return null;
+  const lastUsed = new Map();
+  history.posts.forEach((p, i) => { if (p.topic) lastUsed.set(p.topic, i); });
+  const never = topics.filter((t) => !lastUsed.has(t));
+  const topic = never.length
+    ? never[Math.floor(Math.random() * never.length)]
+    : [...topics].sort((a, b) => lastUsed.get(a) - lastUsed.get(b))[0];
+  log(`topic: ${topic}`);
+  return topic;
 }
 
 /** Best audience-local weekday-hour slot, learned from history; empty until there is data. */

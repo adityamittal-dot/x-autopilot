@@ -4,8 +4,9 @@
 
 **Your X account, run like a publication. Written from real news and your real commits.**
 
-Three well-timed posts every weekday for developers and founders, a weekly build-in-public
-recap from your GitHub, and a loop that learns what gets *your* audience to reply.
+Five posts every weekday and three on weekends: bookmarkable tips from your stack, what you
+built this week, sharp takes, real questions, and relatable observations. Every post is
+fact-checked, and a loop learns what gets *your* audience to reply.
 
 [![post](https://github.com/adityamittal-dot/x-autopilot/actions/workflows/post.yml/badge.svg)](https://github.com/adityamittal-dot/x-autopilot/actions/workflows/post.yml)
 [![metrics](https://github.com/adityamittal-dot/x-autopilot/actions/workflows/metrics.yml/badge.svg)](https://github.com/adityamittal-dot/x-autopilot/actions/workflows/metrics.yml)
@@ -33,18 +34,23 @@ skips a slot rather than posting something weak.
 
 ## What it does
 
-- **Daily takes on what matters to builders.** Pulls ~200 items a day from seven sources,
-  ranks them so no single feed floods the pool, and has a cheap model shortlist the six
-  with the most reach potential. A strong model then writes three variants in your voice.
-- **Build in public, without the busywork.** Wednesday's midday post is one concrete
-  thing you tried, fixed, or decided this week. Friday's is a weekly recap of what you
-  learned, shipped, and are working on. Both come straight from your GitHub activity.
+- **A content mix that matches what grows on X.** From scraping 20 fast-growing dev
+  accounts: detached news commentary is the worst-performing format (an AI-news account
+  with 158K followers averages ~11 likes), while bookmarkable tips, first-hand build posts,
+  relatable observations, and real questions do far better. So most posts are those, and
+  news only shows up as a short first-person take.
+- **Build in public, without the busywork.** Each weekday a post covers one concrete
+  thing you tried, fixed, or decided, from commits no earlier post has used. Friday adds a
+  weekly recap. When there's nothing new in your GitHub, the slot posts something else.
+- **Fact-checked before it goes out.** A separate review pass checks every candidate
+  against its sources (or against well-established knowledge, for tips) and rejects
+  invented experiences, made-up numbers, and wrong technical claims.
 - **Written for how X ranks posts.** X weighs a reply at ~27× a like and a bookmark at
   ~20×, and a single mute costs more than many likes earn. Posts are shaped to earn
   replies and bookmarks, with no links (X shows those to fewer people), no hashtag
   stacks, and no engagement bait.
 - **A quality gate with teeth.** Length, links, banned clichés, hook quality, and
-  similarity to your last 20 posts are all checked. The best passing variant wins; if
+  similarity to your last 30 posts are all checked. The best passing variant wins; if
   none pass, nothing is posted.
 - **It learns.** Engagement from X flows back daily. Once each post style has data, the
   picker favors the styles your audience responds to, while still exploring.
@@ -105,23 +111,31 @@ at API rates it's roughly $0.08–0.12 per post.
 
 ### Schedule
 
-| Slot | Mon, Tue, Thu | Wed | Fri | New York | UTC (summer) |
+| New York | Mon–Thu | Fri | | Weekend | Sat, Sun |
 |---|---|---|---|---|---|
-| Morning | news take | news take | news take | 9:30 AM | 13:30 |
-| Midday | news take | **I tried it** | **weekly recap** | 1:00 PM | 17:00 |
-| Evening | news take | news take | news take | 5:30 PM | 21:30 |
+| 8:30 AM | tip | tip | | 10:00 AM | tip |
+| 11:00 AM | build post (else observation) | tip | | 1:30 PM | observation |
+| 1:30 PM | news take (else observation) | **weekly recap** | | 5:00 PM | question |
+| 4:00 PM | question | question | | | |
+| 7:00 PM | observation | observation | | | |
+
+About 31 posts a week, roughly 5 from GitHub and 4 news takes. X shows each follower only a
+few posts per author per session, so more than ~5 a day mostly adds filler.
 
 Slots are hours apart because X counts a second post from the same author in one feed
 refresh at about half. Each slot gets up to 20 minutes of jitter. Daylight saving is
-handled, and the timezone, times, days, and post types are all in `config.json`.
+handled, and the timezone, times, days, fallbacks, and post types are all in `config.json`.
 
 ### Post styles
 
 | Type | Styles (weighted, then learned from your engagement) |
 |---|---|
-| News take | builder take · business of AI · worth saving · contrarian · what it means · paper in plain words · roundup |
-| I tried it | tried and the result · problem solved · a decision and its tradeoff |
-| Weekly recap | lesson-led · shipped-led · three bullets |
+| Tip (`tip`) | gotcha · do this, not that · small trick · mental model, rotating through the topics in `formats.tip.topics` |
+| Build post (`bip`) | tried and the result · problem solved · a decision and its tradeoff |
+| News take (`insight`) | builder take · business of AI · worth saving · contrarian · what it means · student lens · worth your time |
+| Question (`question`) | from the news · stack tradeoff · student question |
+| Observation (`observation`) | dev life · AI coding reality · student builder · hot take |
+| Weekly recap (`recap`) | lesson-led · shipped-led · three bullets |
 
 ---
 
@@ -156,6 +170,9 @@ account connected, and a Claude subscription or API key.
    npm run dry           # writes a real news post and prints it; nothing is sent
    npm run dry:bip       # same for an "I tried it" post
    npm run dry:recap     # same for the weekly recap
+   npm run dry:tip       # a tip from your stack
+   npm run dry:question  # a question for the timeline
+   npm run dry:observation  # a short observation
    ```
 7. **Enable Actions** on your fork. The schedule takes over on the next weekday. To test
    end to end first: `Actions → post → Run workflow`, type **insight**, **dry_run** off,
@@ -191,8 +208,10 @@ files the model reads on every run.
 |---|---|
 | How posts sound | **`voice.md`** |
 | How posts are shaped | **`playbook.md`** |
-| Posting times, days, or posts per day | `schedule.slots`, `schedule.days`, `schedule.audienceTimezone`, plus a `cron` line in `.github/workflows/post.yml` a few hours before any new slot |
-| Which post type runs in a slot on a given day | `schedule.slots[].byWeekday` (`insight`, `bip`, `recap`) |
+| Posting times, days, or posts per day | `schedule.slots` (each with `at`, `days`, `type`), `schedule.audienceTimezone`, plus a `cron` line in `.github/workflows/post.yml` a few hours before any new slot |
+| Which post type runs in a slot on a given day | `schedule.slots[].byWeekday` (`tip`, `bip`, `insight`, `question`, `observation`, `recap`) |
+| What a slot posts when it has no material | `schedule.slots[].fallback` |
+| Which parts of your stack tips cover | `formats.tip.topics` |
 | The mix of post styles | `formats.<type>.angles[].weight` |
 | News sources and topics | `news.sources`, `news.hnQueries`, `news.devtoTags`, `news.techcrunchFeeds`, `news.maxSourceShare` |
 | Who the posts are for | `identity.audience`, `identity.interests`, `identity.stack` |

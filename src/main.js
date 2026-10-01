@@ -1,11 +1,16 @@
 import { loadConfig, loadVoice, loadPlaybook, log, warn, die, inZone, publishTime } from './util.js';
 import { collectGitHubActivity } from './sources/github.js';
-import { collectNews } from './sources/news.js';
-import { buildInsightPrompt, buildBipPrompt, buildRecapPrompt, generateVariants } from './generate.js';
+import { collectNews, renderNews } from './sources/news.js';
+import {
+  buildInsightPrompt, buildBipPrompt, buildRecapPrompt,
+  buildTipPrompt, buildQuestionPrompt, buildObservationPrompt,
+  generateVariants,
+} from './generate.js';
 import { hasClaudeCredential } from './llm.js';
 import { triageNews, condenseActivity } from './prep.js';
 import { validate, score } from './quality.js';
-import { chooseAngle, dueSlots } from './scheduler.js';
+import { factCheck } from './factcheck.js';
+import { chooseAngle, chooseTopic, dueSlots } from './scheduler.js';
 import { resolveChannel, createPost } from './publish/buffer.js';
 import { loadHistory, appendPost, recentTexts, recentSourceUrls } from './store.js';
 
@@ -13,9 +18,15 @@ import { loadHistory, appendPost, recentTexts, recentSourceUrls } from './store.
  * One run fills every slot that is due (config.json → schedule.slots), one X post each.
  * Token-heavy prep (news triage, commit condensing) runs on the cheap worker model;
  * only the short briefs reach the expensive writer model.
- *   insight: a builder's take on the latest AI, dev, and startup news and research
- *   bip:     one thing tried, fixed, or decided, from this week's GitHub work (midweek)
- *   recap:   what I learned / shipped / am working on this week (weekly)
+ *   insight:     a builder's take on the latest AI, dev, and startup news and research
+ *   bip:         one thing tried, fixed, or decided, from this week's GitHub work (midweek)
+ *   recap:       what I learned / shipped / am working on this week (weekly)
+ *   tip:         a bookmarkable practical tip from the author's own stack, by topic
+ *   question:    a genuine question to the timeline (news-anchored or a stack tradeoff)
+ *   observation: a short, relatable observation about building software or AI tools
+ *
+ * A slot that has no material (no fresh news, no GitHub activity, no unused commits)
+ * runs its configured `fallback` type instead, when one is set, and is otherwise skipped.
  *
  * `--type <t>` skips the slot logic and writes one post of that type, going live a
  * few minutes after the run. That's what `npm run dry` and manual runs use.
@@ -40,7 +51,7 @@ async function run() {
   preflight(cfg);
   const ctx = { cfg, voice: loadVoice(), playbook: loadPlaybook(), history: loadHistory(), news: null, activity: {} };
 
-  const slots = TYPE ? [{ id: 'manual', type: TYPE, day: null, at: null }] : dueSlots(cfg, ctx.history);
+  const slots = TYPE ? [{ id: 'manual', type: TYPE, fallback: null, day: null, at: null }] : dueSlots(cfg, ctx.history);
   log(`mode=${DRY ? 'DRY RUN' : 'live'} posts=${ctx.history.posts.length} ` +
     `slots=${slots.map((s) => `${s.id}:${s.type}`).join(',') || 'none due'}`);
   if (!slots.length) return;
@@ -58,42 +69,135 @@ async function run() {
   if (failed) die(`${failed} of ${slots.length} slot(s) produced no post (see above).`);
 }
 
-async function runSlot(ctx, slot) {
+/** Subjects already used by a bip or recap post in the last `days`, so bip never repeats material. */
+function usedCommitSubjects(history, days) {
+  const since = Date.now() - days * 864e5;
+  const subjects = new Set();
+  for (const p of history.posts) {
+    if (p.type !== 'bip' && p.type !== 'recap') continue;
+    const when = Date.parse(p.dueAt || p.createdAt || '');
+    if (!(when >= since)) continue;
+    for (const s of p.commits || []) subjects.add(s);
+  }
+  return subjects;
+}
+
+/**
+ * Gather the real-world material for one post type and build its prompt + the
+ * context string the fact-checker will verify it against. Returns null when there
+ * is nothing to post about (the caller then tries the slot's fallback, if any).
+ */
+async function gatherMaterial(ctx, type, recent) {
   const { cfg, voice, playbook, history } = ctx;
-  const type = slot.type;
   const fmt = cfg.formats[type];
-  log(`── ${slot.id}: ${type}`);
 
-  const recent = recentTexts(history, cfg.quality.similarityWindow);
-  let buildPrompt, news = [], activity = null, angle;
-
-  if (type === 'recap' || type === 'bip') {
-    const days = fmt.lookbackDays ?? 7;
-    activity = ctx.activity[days] ??= await collectGitHubActivity({ ...cfg, github: { ...cfg.github, lookbackDays: days } });
-    if (!activity.repos.length) {
-      warn(`No GitHub activity in the last ${days} days. Skipping rather than inventing a post.`);
-      return;
-    }
-    angle = chooseAngle(cfg, history, type, { activity });
-    const digest = await condenseActivity(activity, cfg);          // cheap worker model
-    const build = type === 'bip' ? buildBipPrompt : buildRecapPrompt;
-    buildPrompt = () => build({ cfg, voice, playbook, digest, angle, recent });
-  } else {
-    // One fetch per run; each slot drops the stories already posted, including by an earlier slot.
+  if (type === 'insight' || type === 'question') {
     ctx.news ??= await collectNews(cfg);
     const used = recentSourceUrls(history, cfg.news.avoidRepeatWindow);
-    news = ctx.news.filter((n) => !used.has(n.url));
-    if (news.length < (cfg.news.minItems ?? 4)) {
-      warn(`Only ${news.length} fresh news item(s). Skipping rather than posting something thin.`);
-      return;
+    let news = ctx.news.filter((n) => !used.has(n.url));
+    const enough = news.length >= (cfg.news.minItems ?? 4);
+
+    if (type === 'insight') {
+      if (!enough) {
+        warn(`Only ${news.length} fresh news item(s). Skipping rather than posting something thin.`);
+        return null;
+      }
+      news = await triageNews(news, cfg, recent);
+      const angle = chooseAngle(cfg, history, type, { news });
+      return {
+        news, angle,
+        buildPrompt: () => buildInsightPrompt({ cfg, voice, playbook, news, angle, recent }),
+        context: renderNews(news),
+        factCheckType: 'insight',
+      };
     }
-    news = await triageNews(news, cfg, recent);                    // cheap worker model
-    angle = chooseAngle(cfg, history, type, { news });
-    buildPrompt = () => buildInsightPrompt({ cfg, voice, playbook, news, angle, recent });
+
+    // question: news is a bonus, not a requirement — stack-tradeoff and student-question work without it.
+    news = enough ? await triageNews(news, cfg, recent) : [];
+    const topic = chooseTopic(cfg, history);
+    const angle = chooseAngle(cfg, history, type, { news });
+    const hasNewsBlock = angle.id !== 'stack-tradeoff' && news.length > 0;
+    return {
+      news, topic, angle,
+      buildPrompt: () => buildQuestionPrompt({ cfg, voice, playbook, news, topic, angle, recent }),
+      context: hasNewsBlock ? renderNews(news) : topic,
+      factCheckType: hasNewsBlock ? 'question' : 'question-stack',
+    };
   }
 
-  // Generate, gate, score. One retry if nothing passes.
-  let chosen = null, model = null;
+  if (type === 'bip' || type === 'recap') {
+    const days = fmt.lookbackDays ?? 7;
+    let activity = ctx.activity[days] ??= await collectGitHubActivity({ ...cfg, github: { ...cfg.github, lookbackDays: days } });
+    if (!activity.repos.length) {
+      warn(`No GitHub activity in the last ${days} days. Skipping rather than inventing a post.`);
+      return null;
+    }
+
+    if (type === 'bip') {
+      // Never retell a commit a bip or recap already used in the last two weeks.
+      const used = usedCommitSubjects(history, 14);
+      const repos = activity.repos
+        .map((r) => ({ ...r, commits: r.commits.filter((c) => !used.has(c.subject)) }))
+        .filter((r) => r.commits.length);
+      if (!repos.length) {
+        warn('No unused commits in the lookback window. Skipping rather than repeating material.');
+        return null;
+      }
+      activity = { ...activity, repos };
+    }
+
+    const angle = chooseAngle(cfg, history, type, { activity });
+    const digest = await condenseActivity(activity, cfg);          // cheap worker model
+    const build = type === 'bip' ? buildBipPrompt : buildRecapPrompt;
+    return {
+      activity, angle,
+      buildPrompt: () => build({ cfg, voice, playbook, digest, angle, recent }),
+      context: digest,
+      factCheckType: type,
+    };
+  }
+
+  if (type === 'tip') {
+    const topic = chooseTopic(cfg, history);
+    const angle = chooseAngle(cfg, history, type, {});
+    return {
+      topic, angle,
+      buildPrompt: () => buildTipPrompt({ cfg, voice, playbook, topic, angle, recent }),
+      context: topic,
+      factCheckType: 'tip',
+    };
+  }
+
+  // observation: no external data at all.
+  const angle = chooseAngle(cfg, history, type, {});
+  return {
+    angle,
+    buildPrompt: () => buildObservationPrompt({ cfg, voice, playbook, angle, recent }),
+    context: null,
+    factCheckType: 'observation',
+  };
+}
+
+async function runSlot(ctx, slot) {
+  const { cfg, history } = ctx;
+  const recent = recentTexts(history, cfg.quality.similarityWindow);
+
+  // Try the slot's own type first, then its configured fallback (if any) when there's no material.
+  const attempts = [slot.type, ...(slot.fallback && slot.fallback !== slot.type ? [slot.fallback] : [])];
+  let material = null, type = null;
+  for (const t of attempts) {
+    log(`── ${slot.id}: ${t}${t !== slot.type ? ' (fallback)' : ''}`);
+    material = await gatherMaterial(ctx, t, recent);
+    if (material) { type = t; break; }
+    if (t === slot.type && slot.fallback) log(`  ${slot.id}: no material for ${t}, trying fallback "${slot.fallback}"`);
+  }
+  if (!material) return; // nothing to post, and no usable fallback — skip as today
+
+  const fmt = cfg.formats[type];
+  const { buildPrompt, context, angle, news = [], activity, topic } = material;
+
+  // Generate, gate, score, fact-check. One retry if nothing passes.
+  let chosen = null, model = null, gatePassed = 0;
   for (let attempt = 1; attempt <= 2 && !chosen; attempt++) {
     let batch;
     try {
@@ -110,14 +214,21 @@ async function runSlot(ctx, slot) {
     for (const g of graded) {
       log(`  ${g.pass ? '✓' : '✗'} [${g.pass ? g.score : g.reasons.join(', ')}] ${g.text.replace(/\n/g, ' ⏎ ').slice(0, 100)}`);
     }
-    chosen = graded.filter((g) => g.pass).sort((a, b) => b.score - a.score)[0] || null;
+
+    const passing = graded.filter((g) => g.pass).sort((a, b) => b.score - a.score);
+    gatePassed += passing.length;
+    for (const candidate of passing) {
+      const check = await factCheck(candidate.text, cfg, { type: material.factCheckType, context });
+      log(`  ${check.ok ? '✓' : '✗'} fact-check${check.skipped ? ' (checker unavailable, not blocking)' : ''}` +
+        `${check.problems.length ? `: ${check.problems.join('; ')}` : ''}`);
+      if (check.ok) { chosen = candidate; break; }
+    }
   }
 
   if (!chosen) {
-    // No template fallback: a weak post costs more reach than a skipped slot.
-    throw new Error(model
-      ? 'nothing passed the quality gate after 2 attempts'
-      : 'the LLM never answered (see warnings above)');
+    // No template fallback: a weak or wrong post costs more reach than a skipped slot.
+    if (!model) throw new Error('the LLM never answered (see warnings above)');
+    throw new Error(gatePassed ? 'nothing passed fact-check after 2 attempts' : 'nothing passed the quality gate after 2 attempts');
   }
 
   const { dueAt, onSlot } = publishTime(cfg, slot.at);
@@ -125,6 +236,17 @@ async function runSlot(ctx, slot) {
   const localSlot = `${zone.weekday}-${String(zone.hour).padStart(2, '0')}`;
   const newsUrls = new Set(news.map((n) => n.url));
   const sourceUrls = (chosen.sources || []).filter((u) => newsUrls.has(u));
+
+  // bip: only the evidence the model cited that actually matches a real commit subject.
+  // recap: every commit subject the digest was built from (no evidence field is asked for).
+  let commits = [];
+  if (type === 'bip') {
+    const known = new Set((activity?.repos || []).flatMap((r) => r.commits.map((c) => c.subject)));
+    commits = (chosen.evidence || []).filter((e) => known.has(e));
+  } else if (type === 'recap') {
+    commits = (activity?.repos || []).flatMap((r) => r.commits.map((c) => c.subject));
+  }
+  const postTopic = (type === 'tip' || type === 'question') ? (topic || null) : null;
 
   console.log('\n' + '─'.repeat(64));
   console.log(chosen.text);
@@ -149,6 +271,8 @@ async function runSlot(ctx, slot) {
     slotDay: slot.day || inZone(new Date(), cfg.schedule.audienceTimezone).date,
     text: chosen.text,
     angle: angle.id,
+    topic: postTopic,
+    commits,
     model,
     createdAt: new Date().toISOString(),
     dueAt: post.dueAt || dueAt.toISOString(),

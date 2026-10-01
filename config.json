@@ -67,32 +67,101 @@
   },
   "schedule": {
     "audienceTimezone": "America/New_York",
-    "days": [
-      "Mon",
-      "Tue",
-      "Wed",
-      "Thu",
-      "Fri"
-    ],
     "slots": [
       {
         "id": "morning",
-        "at": "09:30",
-        "type": "insight"
+        "at": "08:30",
+        "type": "tip",
+        "days": [
+          "Mon",
+          "Tue",
+          "Wed",
+          "Thu",
+          "Fri"
+        ]
+      },
+      {
+        "id": "late-morning",
+        "at": "11:00",
+        "type": "bip",
+        "fallback": "observation",
+        "byWeekday": {
+          "Fri": "tip"
+        },
+        "days": [
+          "Mon",
+          "Tue",
+          "Wed",
+          "Thu",
+          "Fri"
+        ]
       },
       {
         "id": "midday",
-        "at": "13:00",
+        "at": "13:30",
         "type": "insight",
+        "fallback": "observation",
         "byWeekday": {
-          "Wed": "bip",
           "Fri": "recap"
-        }
+        },
+        "days": [
+          "Mon",
+          "Tue",
+          "Wed",
+          "Thu",
+          "Fri"
+        ]
+      },
+      {
+        "id": "afternoon",
+        "at": "16:00",
+        "type": "question",
+        "days": [
+          "Mon",
+          "Tue",
+          "Wed",
+          "Thu",
+          "Fri"
+        ]
       },
       {
         "id": "evening",
-        "at": "17:30",
-        "type": "insight"
+        "at": "19:00",
+        "type": "observation",
+        "days": [
+          "Mon",
+          "Tue",
+          "Wed",
+          "Thu",
+          "Fri"
+        ]
+      },
+      {
+        "id": "wk-morning",
+        "at": "10:00",
+        "type": "tip",
+        "days": [
+          "Sat",
+          "Sun"
+        ]
+      },
+      {
+        "id": "wk-midday",
+        "at": "13:30",
+        "type": "observation",
+        "days": [
+          "Sat",
+          "Sun"
+        ]
+      },
+      {
+        "id": "wk-evening",
+        "at": "17:00",
+        "type": "question",
+        "days": [
+          "Sat",
+          "Sun"
+        ]
       }
     ],
     "writeAheadHours": 9,
@@ -131,21 +200,21 @@
           "brief": "What ONE release, tool, or deal actually changes, in plain words, for someone building a real product. Lead with the consequence, not the announcement."
         },
         {
-          "id": "paper-plain",
-          "weight": 1,
-          "brief": "ONE research paper from the list: its core finding in one sentence a working builder understands, then why it matters in practice. Only if a research item is in the list."
+          "id": "student-lens",
+          "weight": 2,
+          "brief": "Read ONE item from the seat of a CS undergrad who ships side projects: what it changes for students, juniors, and interns learning to build right now (what to learn, what stops mattering, what gets more valuable). A real opinion, stated plainly. Never invent personal events, grades, offers, or internships."
         },
         {
-          "id": "roundup",
-          "weight": 1,
-          "brief": "A one-line hook, then exactly three items from the list that matter to builders, one short line each. No numbering emoji."
+          "id": "worth-your-time",
+          "weight": 2,
+          "brief": "Point builders at ONE item worth their time (a talk, a post, a repo, a paper) and say in one or two lines exactly why it is worth it and who it is for. Curation with a real reason, not a summary. Name it in words, no link."
         }
       ]
     },
     "bip": {
       "maxChars": 275,
       "maxLines": 6,
-      "lookbackDays": 5,
+      "lookbackDays": 4,
       "angles": [
         {
           "id": "tried-result",
@@ -185,6 +254,96 @@
           "brief": "A one-line hook about the week, then three short lines: something learned, something shipped, something in progress."
         }
       ]
+    },
+    "tip": {
+      "maxChars": 275,
+      "maxLines": 7,
+      "angles": [
+        {
+          "id": "gotcha",
+          "weight": 3,
+          "brief": "ONE real gotcha in the topic: the behavior that surprises people, why it happens, and the fix. Concrete enough to bookmark."
+        },
+        {
+          "id": "do-this-not-that",
+          "weight": 3,
+          "brief": "ONE common pattern in the topic and the better one, with the reason in one line. Show the actual function, flag, or syntax by name."
+        },
+        {
+          "id": "small-trick",
+          "weight": 2,
+          "brief": "ONE small, little-known but long-stable feature in the topic that saves real time, and when to reach for it."
+        },
+        {
+          "id": "mental-model",
+          "weight": 2,
+          "brief": "ONE idea that makes the topic click: how it actually works under the hood, in two or three plain lines."
+        }
+      ],
+      "topics": [
+        "Django ORM and querysets",
+        "Django migrations",
+        "Django settings and deployment",
+        "Python standard library",
+        "Python typing and dataclasses",
+        "Next.js App Router",
+        "React state and effects",
+        "TypeScript types",
+        "Tailwind CSS",
+        "PostgreSQL indexes and queries",
+        "PostgreSQL transactions and locks",
+        "Docker images and builds",
+        "Git workflows",
+        "HTTP, caching, and APIs",
+        "debugging and profiling"
+      ]
+    },
+    "question": {
+      "maxChars": 260,
+      "maxLines": 5,
+      "angles": [
+        {
+          "id": "news-question",
+          "weight": 3,
+          "brief": "From ONE news item: a specific question working builders can answer from their own experience, with the author's own lean stated first so it is a conversation, not a poll."
+        },
+        {
+          "id": "stack-tradeoff",
+          "weight": 3,
+          "brief": "A real tradeoff inside the topic that experienced developers disagree on. State which way the author leans and why in one line, then ask what others pick and when."
+        },
+        {
+          "id": "student-question",
+          "weight": 2,
+          "brief": "A specific question a CS student who builds things would genuinely want answered by people ahead of them (about learning, shipping, or working with AI tools), anchored to ONE news item or the topic. No invented personal events."
+        }
+      ]
+    },
+    "observation": {
+      "maxChars": 220,
+      "maxLines": 4,
+      "angles": [
+        {
+          "id": "dev-life",
+          "weight": 3,
+          "brief": "A short, relatable observation about building software that working developers will recognize instantly (debugging, deploys, naming, estimates, side projects, docs). Dry and specific, not a joke template. One to three lines."
+        },
+        {
+          "id": "ai-coding-reality",
+          "weight": 3,
+          "brief": "A short, honest observation about what coding with AI tools is actually like day to day: where it helps, where it quietly costs time. Specific, not hype and not doom."
+        },
+        {
+          "id": "student-builder",
+          "weight": 2,
+          "brief": "A short observation from the seat of a CS undergrad who ships side projects: the gap between coursework and building real things, learning in public, what actually teaches you. No invented personal events, grades, offers, or internships."
+        },
+        {
+          "id": "hot-take",
+          "weight": 2,
+          "brief": "One firm, defensible opinion about software development practice in one or two lines, stated plainly enough that someone will reply to disagree. Never dunk on a person or company."
+        }
+      ]
     }
   },
   "news": {
@@ -221,7 +380,7 @@
       "lobsters": true,
       "githubRising": true
     },
-    "avoidRepeatWindow": 30,
+    "avoidRepeatWindow": 45,
     "maxSourceShare": 0.25,
     "techcrunchFeeds": [
       "https://techcrunch.com/category/artificial-intelligence/feed/",
@@ -253,9 +412,9 @@
   "quality": {
     "maxHashtags": 1,
     "maxEmoji": 1,
-    "minChars": 80,
+    "minChars": 40,
     "similarityThreshold": 0.5,
-    "similarityWindow": 20,
+    "similarityWindow": 30,
     "bannedPhrases": [
       "excited to announce",
       "thrilled to",
