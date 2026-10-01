@@ -342,6 +342,28 @@
       "qualityScore": 48,
       "metrics": null,
       "metricsUpdatedAt": null
+    },
+    {
+      "id": "6abe8a1776ec6eedcd1471c7",
+      "type": "insight",
+      "slot": "evening",
+      "slotDay": "2026-10-01",
+      "text": "Agent money is going everywhere except the guardrails.\nFlow Engineering: agents for hardware design, at a $750M valuation\nPhoton: $4.5M to swap mobile apps for agents over messaging\nA dev.to test on AWS: two of three governance policies blocked nothing",
+      "angle": "roundup",
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-01T16:28:07.804Z",
+      "dueAt": "2026-10-01T21:37:00.000Z",
+      "localSlot": "Thu-17",
+      "repos": [],
+      "sourceUrls": [
+        "https://techcrunch.com/2026/09/30/valor-atreides-and-sequoia-back-ai-startup-flow-engineering-at-750m-valuation/",
+        "https://techcrunch.com/2026/10/01/photon-held-a-funeral-for-mobile-apps-now-it-has-4-5m-to-help-replace-them-with-agents/",
+        "https://dev.to/aws-builders/ai-agent-governance-on-aws-block-agents-prove-eu-ai-act-compliance-1829"
+      ],
+      "charCount": 252,
+      "qualityScore": 52,
+      "metrics": null,
+      "metricsUpdatedAt": null
     }
   ]
 }
