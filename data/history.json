@@ -25,7 +25,7 @@
         "impressions": 0,
         "clicks": 0
       },
-      "metricsUpdatedAt": "2026-09-30T09:43:27.356Z",
+      "metricsUpdatedAt": "2026-10-01T10:09:46.067Z",
       "status": "sent",
       "sentAt": "2026-09-25T17:12:01.118Z",
       "url": "https://x.com/1687093333124845568/status/2103532988830978148"
@@ -55,7 +55,7 @@
         "impressions": 0,
         "clicks": 0
       },
-      "metricsUpdatedAt": "2026-09-30T09:43:28.947Z",
+      "metricsUpdatedAt": "2026-10-01T10:09:47.675Z",
       "status": "sent",
       "sentAt": "2026-09-28T13:43:02.100Z",
       "url": "https://x.com/1687093333124845568/status/2104567559785693357"
@@ -84,10 +84,10 @@
         "comments": 0,
         "engagementRate": 0,
         "reposts": 0,
-        "impressions": 1,
+        "impressions": 2,
         "clicks": 0
       },
-      "metricsUpdatedAt": "2026-09-30T09:43:30.529Z",
+      "metricsUpdatedAt": "2026-10-01T10:09:49.267Z",
       "status": "sent",
       "sentAt": "2026-09-28T17:05:02.013Z",
       "url": "https://x.com/1687093333124845568/status/2104618394192355790"
@@ -117,7 +117,7 @@
         "impressions": 1,
         "clicks": 0
       },
-      "metricsUpdatedAt": "2026-09-30T09:43:32.116Z",
+      "metricsUpdatedAt": "2026-10-01T10:09:50.862Z",
       "status": "sent",
       "sentAt": "2026-09-28T21:47:00.975Z",
       "url": "https://x.com/1687093333124845568/status/2104689357726601398"
@@ -147,7 +147,7 @@
         "impressions": 0,
         "clicks": 0
       },
-      "metricsUpdatedAt": "2026-09-30T09:43:33.711Z",
+      "metricsUpdatedAt": "2026-10-01T10:09:52.459Z",
       "status": "sent",
       "sentAt": "2026-09-29T13:38:01.434Z",
       "url": "https://x.com/1687093333124845568/status/2104928686310900121"
@@ -177,7 +177,7 @@
         "impressions": 0,
         "clicks": 0
       },
-      "metricsUpdatedAt": "2026-09-30T09:43:35.376Z",
+      "metricsUpdatedAt": "2026-10-01T10:09:54.054Z",
       "status": "sent",
       "sentAt": "2026-09-29T17:18:02.078Z",
       "url": "https://x.com/1687093333124845568/status/2104984054126846253"
@@ -207,7 +207,7 @@
         "impressions": 0,
         "clicks": 0
       },
-      "metricsUpdatedAt": "2026-09-30T09:43:36.974Z",
+      "metricsUpdatedAt": "2026-10-01T10:09:55.642Z",
       "status": "sent",
       "sentAt": "2026-09-29T21:30:08.805Z",
       "url": "https://x.com/1687093333124845568/status/2105047499513692385"
@@ -229,8 +229,18 @@
       ],
       "charCount": 238,
       "qualityScore": 40,
-      "metrics": null,
-      "metricsUpdatedAt": null
+      "metrics": {
+        "reactions": 0,
+        "comments": 0,
+        "engagementRate": 0,
+        "reposts": 0,
+        "impressions": 0,
+        "clicks": 0
+      },
+      "metricsUpdatedAt": "2026-10-01T10:09:57.239Z",
+      "status": "sent",
+      "sentAt": "2026-09-30T13:40:05.521Z",
+      "url": "https://x.com/1687093333124845568/status/2105291594618323425"
     },
     {
       "id": "6abcf155a36a29488a239402",
@@ -250,8 +260,18 @@
       "sourceUrls": [],
       "charCount": 252,
       "qualityScore": 42,
-      "metrics": null,
-      "metricsUpdatedAt": null
+      "metrics": {
+        "reactions": 0,
+        "comments": 0,
+        "engagementRate": 0,
+        "reposts": 0,
+        "impressions": 3,
+        "clicks": 0
+      },
+      "metricsUpdatedAt": "2026-10-01T10:09:58.843Z",
+      "status": "sent",
+      "sentAt": "2026-09-30T17:07:01.930Z",
+      "url": "https://x.com/1687093333124845568/status/2105343673156108751"
     },
     {
       "id": "6abd3123f47c0fef970850a6",
@@ -270,8 +290,18 @@
       ],
       "charCount": 244,
       "qualityScore": 58,
-      "metrics": null,
-      "metricsUpdatedAt": null
+      "metrics": {
+        "reactions": 0,
+        "comments": 0,
+        "engagementRate": 0,
+        "reposts": 0,
+        "impressions": 0,
+        "clicks": 0
+      },
+      "metricsUpdatedAt": "2026-10-01T10:10:00.447Z",
+      "status": "sent",
+      "sentAt": "2026-09-30T21:37:00.945Z",
+      "url": "https://x.com/1687093333124845568/status/2105411616900563177"
     }
   ]
 }
