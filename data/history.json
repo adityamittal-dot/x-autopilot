@@ -523,6 +523,48 @@
       "qualityScore": 40,
       "metrics": null,
       "metricsUpdatedAt": null
+    },
+    {
+      "id": "6abfc603e11203baed2baa3f",
+      "type": "question",
+      "slot": "afternoon",
+      "slotDay": "2026-10-02",
+      "text": "someone on dev.to built a coding agent on a 1.7B local model.\ni'd learn agent loops that way before paying for a frontier API. failures are free and easy to see.\ndid starting small teach you more, or just slow you down?",
+      "angle": "student-question",
+      "topic": "HTTP, caching, and APIs",
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-02T14:56:03.265Z",
+      "dueAt": "2026-10-02T20:02:00.000Z",
+      "localSlot": "Fri-16",
+      "repos": [],
+      "sourceUrls": [
+        "https://dev.to/anirudh_shivam/i-built-a-coding-agent-that-runs-on-a-17b-model-219p"
+      ],
+      "charCount": 219,
+      "qualityScore": 58,
+      "metrics": null,
+      "metricsUpdatedAt": null
+    },
+    {
+      "id": "6abfc61b8eb909c659e1fc71",
+      "type": "observation",
+      "slot": "evening",
+      "slotDay": "2026-10-02",
+      "text": "renaming a variable takes a second.\nrenaming a django app takes an afternoon, because migrations, content types and every foreign key still remember the old label.",
+      "angle": "dev-life",
+      "topic": null,
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-02T14:56:27.921Z",
+      "dueAt": "2026-10-02T23:10:00.000Z",
+      "localSlot": "Fri-19",
+      "repos": [],
+      "sourceUrls": [],
+      "charCount": 163,
+      "qualityScore": 36,
+      "metrics": null,
+      "metricsUpdatedAt": null
     }
   ]
 }
