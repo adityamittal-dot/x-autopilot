@@ -25,7 +25,7 @@
         "impressions": 0,
         "clicks": 0
       },
-      "metricsUpdatedAt": "2026-10-01T10:09:46.067Z",
+      "metricsUpdatedAt": "2026-10-02T09:47:32.777Z",
       "status": "sent",
       "sentAt": "2026-09-25T17:12:01.118Z",
       "url": "https://x.com/1687093333124845568/status/2103532988830978148"
@@ -52,10 +52,10 @@
         "comments": 0,
         "engagementRate": 0,
         "reposts": 0,
-        "impressions": 0,
+        "impressions": 4,
         "clicks": 0
       },
-      "metricsUpdatedAt": "2026-10-01T10:09:47.675Z",
+      "metricsUpdatedAt": "2026-10-02T09:47:34.347Z",
       "status": "sent",
       "sentAt": "2026-09-28T13:43:02.100Z",
       "url": "https://x.com/1687093333124845568/status/2104567559785693357"
@@ -84,10 +84,10 @@
         "comments": 0,
         "engagementRate": 0,
         "reposts": 0,
-        "impressions": 2,
+        "impressions": 6,
         "clicks": 0
       },
-      "metricsUpdatedAt": "2026-10-01T10:09:49.267Z",
+      "metricsUpdatedAt": "2026-10-02T09:47:35.931Z",
       "status": "sent",
       "sentAt": "2026-09-28T17:05:02.013Z",
       "url": "https://x.com/1687093333124845568/status/2104618394192355790"
@@ -114,10 +114,10 @@
         "comments": 0,
         "engagementRate": 0,
         "reposts": 0,
-        "impressions": 1,
+        "impressions": 5,
         "clicks": 0
       },
-      "metricsUpdatedAt": "2026-10-01T10:09:50.862Z",
+      "metricsUpdatedAt": "2026-10-02T09:47:37.504Z",
       "status": "sent",
       "sentAt": "2026-09-28T21:47:00.975Z",
       "url": "https://x.com/1687093333124845568/status/2104689357726601398"
@@ -144,10 +144,10 @@
         "comments": 0,
         "engagementRate": 0,
         "reposts": 0,
-        "impressions": 0,
+        "impressions": 4,
         "clicks": 0
       },
-      "metricsUpdatedAt": "2026-10-01T10:09:52.459Z",
+      "metricsUpdatedAt": "2026-10-02T09:47:39.078Z",
       "status": "sent",
       "sentAt": "2026-09-29T13:38:01.434Z",
       "url": "https://x.com/1687093333124845568/status/2104928686310900121"
@@ -174,10 +174,10 @@
         "comments": 0,
         "engagementRate": 0,
         "reposts": 0,
-        "impressions": 0,
+        "impressions": 4,
         "clicks": 0
       },
-      "metricsUpdatedAt": "2026-10-01T10:09:54.054Z",
+      "metricsUpdatedAt": "2026-10-02T09:47:40.652Z",
       "status": "sent",
       "sentAt": "2026-09-29T17:18:02.078Z",
       "url": "https://x.com/1687093333124845568/status/2104984054126846253"
@@ -204,10 +204,10 @@
         "comments": 0,
         "engagementRate": 0,
         "reposts": 0,
-        "impressions": 0,
+        "impressions": 4,
         "clicks": 0
       },
-      "metricsUpdatedAt": "2026-10-01T10:09:55.642Z",
+      "metricsUpdatedAt": "2026-10-02T09:47:42.232Z",
       "status": "sent",
       "sentAt": "2026-09-29T21:30:08.805Z",
       "url": "https://x.com/1687093333124845568/status/2105047499513692385"
@@ -234,10 +234,10 @@
         "comments": 0,
         "engagementRate": 0,
         "reposts": 0,
-        "impressions": 0,
+        "impressions": 4,
         "clicks": 0
       },
-      "metricsUpdatedAt": "2026-10-01T10:09:57.239Z",
+      "metricsUpdatedAt": "2026-10-02T09:47:43.807Z",
       "status": "sent",
       "sentAt": "2026-09-30T13:40:05.521Z",
       "url": "https://x.com/1687093333124845568/status/2105291594618323425"
@@ -268,7 +268,7 @@
         "impressions": 3,
         "clicks": 0
       },
-      "metricsUpdatedAt": "2026-10-01T10:09:58.843Z",
+      "metricsUpdatedAt": "2026-10-02T09:47:45.375Z",
       "status": "sent",
       "sentAt": "2026-09-30T17:07:01.930Z",
       "url": "https://x.com/1687093333124845568/status/2105343673156108751"
@@ -295,10 +295,10 @@
         "comments": 0,
         "engagementRate": 0,
         "reposts": 0,
-        "impressions": 0,
+        "impressions": 5,
         "clicks": 0
       },
-      "metricsUpdatedAt": "2026-10-01T10:10:00.447Z",
+      "metricsUpdatedAt": "2026-10-02T09:47:46.947Z",
       "status": "sent",
       "sentAt": "2026-09-30T21:37:00.945Z",
       "url": "https://x.com/1687093333124845568/status/2105411616900563177"
@@ -320,8 +320,18 @@
       ],
       "charCount": 238,
       "qualityScore": 48,
-      "metrics": null,
-      "metricsUpdatedAt": null
+      "metrics": {
+        "reactions": 0,
+        "comments": 0,
+        "engagementRate": 0,
+        "reposts": 0,
+        "impressions": 4,
+        "clicks": 0
+      },
+      "metricsUpdatedAt": "2026-10-02T09:47:48.515Z",
+      "status": "sent",
+      "sentAt": "2026-10-01T13:36:04.179Z",
+      "url": "https://x.com/1687093333124845568/status/2105652970125742448"
     },
     {
       "id": "6abe49276389dde77a1486c8",
@@ -340,8 +350,18 @@
       ],
       "charCount": 246,
       "qualityScore": 48,
-      "metrics": null,
-      "metricsUpdatedAt": null
+      "metrics": {
+        "reactions": 0,
+        "comments": 0,
+        "engagementRate": 0,
+        "reposts": 0,
+        "impressions": 3,
+        "clicks": 0
+      },
+      "metricsUpdatedAt": "2026-10-02T09:47:50.079Z",
+      "status": "sent",
+      "sentAt": "2026-10-01T17:07:02.504Z",
+      "url": "https://x.com/1687093333124845568/status/2105706063420924371"
     },
     {
       "id": "6abe8a1776ec6eedcd1471c7",
@@ -362,8 +382,18 @@
       ],
       "charCount": 252,
       "qualityScore": 52,
-      "metrics": null,
-      "metricsUpdatedAt": null
+      "metrics": {
+        "reactions": 0,
+        "comments": 0,
+        "engagementRate": 0,
+        "reposts": 0,
+        "impressions": 0,
+        "clicks": 0
+      },
+      "metricsUpdatedAt": "2026-10-02T09:47:51.650Z",
+      "status": "sent",
+      "sentAt": "2026-10-01T21:37:01.195Z",
+      "url": "https://x.com/1687093333124845568/status/2105774005533766139"
     },
     {
       "id": "6abe95705a657f22ab60fa52",
@@ -384,8 +414,18 @@
       ],
       "charCount": 211,
       "qualityScore": 50,
-      "metrics": null,
-      "metricsUpdatedAt": null
+      "metrics": {
+        "reactions": 0,
+        "comments": 0,
+        "engagementRate": 0,
+        "reposts": 0,
+        "impressions": 2,
+        "clicks": 0
+      },
+      "metricsUpdatedAt": "2026-10-02T09:47:53.227Z",
+      "status": "sent",
+      "sentAt": "2026-10-01T20:04:01.182Z",
+      "url": "https://x.com/1687093333124845568/status/2105750601493565550"
     }
   ]
 }
