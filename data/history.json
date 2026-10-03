@@ -605,6 +605,46 @@
       "qualityScore": 36,
       "metrics": null,
       "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ac0d67ead7fd83bc5ecd0bd",
+      "type": "tip",
+      "slot": "wk-morning",
+      "slotDay": "2026-10-03",
+      "text": "a git branch is a pointer, not a copy.\n\nit's one commit hash stored under refs/heads/. each commit moves that pointer forward.\n\nthat's why branching is instant on any repo size, and why deleting a merged branch loses nothing.",
+      "angle": "mental-model",
+      "topic": "Git workflows",
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-03T10:18:38.940Z",
+      "dueAt": "2026-10-03T14:17:00.000Z",
+      "localSlot": "Sat-10",
+      "repos": [],
+      "sourceUrls": [],
+      "charCount": 225,
+      "qualityScore": 28,
+      "metrics": null,
+      "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ac0d697ad7fd83bc5ece2a8",
+      "type": "observation",
+      "slot": "wk-midday",
+      "slotDay": "2026-10-03",
+      "text": "a feature flag that's been at 100% for a month is dead code with extra steps.\ndelete the flag and the old branch the same week rollout finishes.",
+      "angle": "hot-take",
+      "topic": null,
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-03T10:19:03.359Z",
+      "dueAt": "2026-10-03T17:47:00.000Z",
+      "localSlot": "Sat-13",
+      "repos": [],
+      "sourceUrls": [],
+      "charCount": 144,
+      "qualityScore": 37,
+      "metrics": null,
+      "metricsUpdatedAt": null
     }
   ]
 }
