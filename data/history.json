@@ -745,6 +745,28 @@
       "qualityScore": 40,
       "metrics": null,
       "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ac26037a486988a6e1acb01",
+      "type": "question",
+      "slot": "wk-evening",
+      "slotDay": "2026-10-04",
+      "text": "more context can make a coding agent worse, per a dev.to writeup.\n\nmy lean: typed signatures and a few dataclasses tell an agent more than a long README.\n\nwhat's the smallest context that still works for you on a real repo?",
+      "angle": "news-question",
+      "topic": "Python typing and dataclasses",
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-04T14:18:31.153Z",
+      "dueAt": "2026-10-04T21:10:00.000Z",
+      "localSlot": "Sun-17",
+      "repos": [],
+      "sourceUrls": [
+        "https://dev.to/robertadam987_/the-more-context-you-give-your-ai-coding-agent-the-worse-it-can-get-4d40"
+      ],
+      "charCount": 223,
+      "qualityScore": 44,
+      "metrics": null,
+      "metricsUpdatedAt": null
     }
   ]
 }
