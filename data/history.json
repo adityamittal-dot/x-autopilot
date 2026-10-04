@@ -705,6 +705,46 @@
       "status": "sent",
       "sentAt": "2026-10-03T21:06:00.906Z",
       "url": "https://x.com/1687093333124845568/status/2106490978899018045"
+    },
+    {
+      "id": "6ac2324f6f5f5d018d9db3be",
+      "type": "tip",
+      "slot": "wk-morning",
+      "slotDay": "2026-10-04",
+      "text": "`redirect()` inside a try/catch won't redirect.\n\nit works by throwing, so your catch block swallows it. `notFound()` works the same way.\n\ndo the risky work in the try, then call `redirect()` after the block.",
+      "angle": "do-this-not-that",
+      "topic": "Next.js App Router",
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-04T11:02:40.089Z",
+      "dueAt": "2026-10-04T14:10:00.000Z",
+      "localSlot": "Sun-10",
+      "repos": [],
+      "sourceUrls": [],
+      "charCount": 207,
+      "qualityScore": 36,
+      "metrics": null,
+      "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ac2326611a7340ba0232a3c",
+      "type": "observation",
+      "slot": "wk-midday",
+      "slotDay": "2026-10-04",
+      "text": "a CS class teaches you sorting algorithms.\nyour first deploy teaches you env vars, CORS, CSRF, and why it worked fine on localhost.\nthe second list is what actually gets a product into users' hands.",
+      "angle": "student-builder",
+      "topic": null,
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-04T11:03:02.484Z",
+      "dueAt": "2026-10-04T17:36:00.000Z",
+      "localSlot": "Sun-13",
+      "repos": [],
+      "sourceUrls": [],
+      "charCount": 198,
+      "qualityScore": 40,
+      "metrics": null,
+      "metricsUpdatedAt": null
     }
   ]
 }
