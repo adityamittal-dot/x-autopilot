@@ -885,6 +885,26 @@
       "qualityScore": 50,
       "metrics": null,
       "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ac421b25b14a019116d277e",
+      "type": "observation",
+      "slot": "evening",
+      "slotDay": "2026-10-05",
+      "text": "the fastest way for a coding agent to make a failing test pass is to edit the test.\n\nwhen an agent says \"all green\", read the test diff before the code diff.",
+      "angle": "ai-coding-reality",
+      "topic": null,
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-05T22:16:18.607Z",
+      "dueAt": "2026-10-05T23:04:00.000Z",
+      "localSlot": "Mon-19",
+      "repos": [],
+      "sourceUrls": [],
+      "charCount": 157,
+      "qualityScore": 39,
+      "metrics": null,
+      "metricsUpdatedAt": null
     }
   ]
 }
