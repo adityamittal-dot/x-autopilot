@@ -797,6 +797,94 @@
       "status": "sent",
       "sentAt": "2026-10-04T21:10:00.892Z",
       "url": "https://x.com/1687093333124845568/status/2106854373313642597"
+    },
+    {
+      "id": "6ac393a432f9ebfdb1d03a34",
+      "type": "tip",
+      "slot": "morning",
+      "slotDay": "2026-10-05",
+      "text": "a data migration without reverse code can't be rolled back.\n\npass `RunPython(forwards, migrations.RunPython.noop)`\n\nnow `migrate app 0011` steps back past it instead of raising IrreversibleError when a deploy goes wrong.",
+      "angle": "small-trick",
+      "topic": "Django migrations",
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-05T12:10:12.232Z",
+      "dueAt": "2026-10-05T12:45:00.000Z",
+      "localSlot": "Mon-08",
+      "repos": [],
+      "sourceUrls": [],
+      "charCount": 220,
+      "qualityScore": 50,
+      "metrics": null,
+      "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ac393c4ece98e64bc1489ac",
+      "type": "bip",
+      "slot": "late-morning",
+      "slotDay": "2026-10-05",
+      "text": "an offline app can ship an update nobody gets.\n\npacemark's installed version kept serving an old build after releases, because the service worker cache was still holding onto it.\n\nif you ship a PWA, test the update path, not only the first install.",
+      "angle": "problem-solved",
+      "topic": null,
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-05T12:10:44.315Z",
+      "dueAt": "2026-10-05T15:04:00.000Z",
+      "localSlot": "Mon-11",
+      "repos": [
+        "adityamittal-dot/lorevid",
+        "adityamittal-dot/pacemark",
+        "adityamittal-dot/llm-gateway"
+      ],
+      "sourceUrls": [],
+      "charCount": 248,
+      "qualityScore": 40,
+      "metrics": null,
+      "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ac393e20cd800576d419481",
+      "type": "insight",
+      "slot": "midday",
+      "slotDay": "2026-10-05",
+      "text": "your coding agent's filler sentences are on your invoice.\n\na dev.to post covers Caveman, a tool that strips padding from agent output to save tokens.\n\nif you sell an agent feature at a flat price, every extra paragraph comes out of your margin.",
+      "angle": "business-of-ai",
+      "topic": null,
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-05T12:11:14.243Z",
+      "dueAt": "2026-10-05T17:48:00.000Z",
+      "localSlot": "Mon-13",
+      "repos": [],
+      "sourceUrls": [
+        "https://dev.to/arshtechpro/caveman-make-your-ai-coding-agent-talk-less-and-save-tokens-4moi"
+      ],
+      "charCount": 244,
+      "qualityScore": 40,
+      "metrics": null,
+      "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ac393fa6cf62815b7d9e055",
+      "type": "question",
+      "slot": "afternoon",
+      "slotDay": "2026-10-05",
+      "text": "i'd write docs for a coding agent before building it a memory layer.\n\nan HN post with 365 points argues agents don't need memory, they need documentation.\n\non a solo project, what's the first thing you'd put in that doc?",
+      "angle": "student-question",
+      "topic": "Python standard library",
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-05T12:11:39.032Z",
+      "dueAt": "2026-10-05T20:18:00.000Z",
+      "localSlot": "Mon-16",
+      "repos": [],
+      "sourceUrls": [
+        "https://liao.gg/blog/agents-dont-need-memory"
+      ],
+      "charCount": 220,
+      "qualityScore": 50,
+      "metrics": null,
+      "metricsUpdatedAt": null
     }
   ]
 }
