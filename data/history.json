@@ -945,6 +945,94 @@
       "qualityScore": 39,
       "metrics": null,
       "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ac4e14dd566f86ba56328b5",
+      "type": "tip",
+      "slot": "morning",
+      "slotDay": "2026-10-06",
+      "text": "console.log(obj) in chrome devtools can lie to you.\n\nexpanding the object shows its values now, not when the line ran.\n\nlog `structuredClone(obj)` or `JSON.stringify(obj)` instead when you're chasing a mutation bug.",
+      "angle": "gotcha",
+      "topic": "debugging and profiling",
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-06T11:53:49.338Z",
+      "dueAt": "2026-10-06T12:40:00.000Z",
+      "localSlot": "Tue-08",
+      "repos": [],
+      "sourceUrls": [],
+      "charCount": 215,
+      "qualityScore": 36,
+      "metrics": null,
+      "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ac4e16dc2b8e78e154f1baf",
+      "type": "bip",
+      "slot": "late-morning",
+      "slotDay": "2026-10-06",
+      "text": "Canopy's explorer crashed on Go and Rust repos.\n\nthe trigger: out-of-line methods. Go declares them outside the struct with func (s *Server) Run(), and Rust puts them in a separate impl block.\n\nfixed now. if you build a code graph, don't assume a method sits inside its type.",
+      "angle": "tried-result",
+      "topic": null,
+      "commits": [
+        "Fix explorer crash on Go/Rust repos with out-of-line methods"
+      ],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-06T11:54:21.518Z",
+      "dueAt": "2026-10-06T15:06:00.000Z",
+      "localSlot": "Tue-11",
+      "repos": [
+        "adityamittal-dot/llm-gateway",
+        "adityamittal-dot/lorevid",
+        "adityamittal-dot/pacemark"
+      ],
+      "sourceUrls": [],
+      "charCount": 275,
+      "qualityScore": 36,
+      "metrics": null,
+      "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ac4e1946425d398cacd20c9",
+      "type": "insight",
+      "slot": "midday",
+      "slotDay": "2026-10-06",
+      "text": "your system prompt order is a cost decision.\n\na dev.to benchmark on DeepSeek: moving ~30 tokens from the top of the system message to the bottom cut prompt cache effectiveness a lot.\n\nonce a prompt ships, treat its opening lines as frozen.",
+      "angle": "what-it-means",
+      "topic": null,
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-06T11:55:00.423Z",
+      "dueAt": "2026-10-06T17:41:00.000Z",
+      "localSlot": "Tue-13",
+      "repos": [],
+      "sourceUrls": [
+        "https://dev.to/chenyu-ai/your-system-prompt-is-silently-killing-your-prompt-cache-28oa"
+      ],
+      "charCount": 239,
+      "qualityScore": 46,
+      "metrics": null,
+      "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ac4e1aefd3e7cb4c218f677",
+      "type": "question",
+      "slot": "afternoon",
+      "slotDay": "2026-10-06",
+      "text": "filter and sort state belongs in the url, not useState.\n\ni lean on search params in next.js so a refresh or a shared link keeps the exact view.\n\nwhat state do you still keep local even when it could live in the url?",
+      "angle": "stack-tradeoff",
+      "topic": "React state and effects",
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-06T11:55:26.416Z",
+      "dueAt": "2026-10-06T20:17:00.000Z",
+      "localSlot": "Tue-16",
+      "repos": [],
+      "sourceUrls": [],
+      "charCount": 215,
+      "qualityScore": 48,
+      "metrics": null,
+      "metricsUpdatedAt": null
     }
   ]
 }
