@@ -1103,6 +1103,96 @@
       "qualityScore": 36,
       "metrics": null,
       "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ac62f4499c8f040f196ab4b",
+      "type": "tip",
+      "slot": "morning",
+      "slotDay": "2026-10-07",
+      "text": "generic conditional types split unions apart.\n\n`T extends any ? T[] : never` turns `string | number` into `string[] | number[]`.\n\nwrap both sides, `[T] extends [any]`, and you get `(string | number)[]` instead.",
+      "angle": "mental-model",
+      "topic": "TypeScript types",
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-07T11:38:45.085Z",
+      "dueAt": "2026-10-07T12:39:00.000Z",
+      "localSlot": "Wed-08",
+      "repos": [],
+      "sourceUrls": [],
+      "charCount": 210,
+      "qualityScore": 36,
+      "metrics": null,
+      "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ac62f63738a74db823b49d0",
+      "type": "bip",
+      "slot": "late-morning",
+      "slotDay": "2026-10-07",
+      "text": "semantic caching in llm-gateway is opt-in and tenant-scoped.\n\na semantic hit returns an answer written for a different, similar prompt. each customer should decide whether that's acceptable. it shouldn't be the default.\n\none tenant's cache never serves another.",
+      "angle": "decision",
+      "topic": null,
+      "commits": [
+        "Day 15: exact + semantic cache (tenant-scoped, opt-in, SSE replay)"
+      ],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-07T11:39:16.006Z",
+      "dueAt": "2026-10-07T15:12:00.000Z",
+      "localSlot": "Wed-11",
+      "repos": [
+        "adityamittal-dot/llm-gateway",
+        "adityamittal-dot/lorevid",
+        "adityamittal-dot/XOR"
+      ],
+      "sourceUrls": [],
+      "charCount": 261,
+      "qualityScore": 32,
+      "metrics": null,
+      "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ac62f85c9dca2d37828ef4a",
+      "type": "insight",
+      "slot": "midday",
+      "slotDay": "2026-10-07",
+      "text": "free credits don't make the side project.\n\nanthropic is giving startups a free year of claude team and $1,000 in credits, per techcrunch.\n\nfor students the api bill was never the real blocker. shipping something real enough to count as a startup is.",
+      "angle": "student-lens",
+      "topic": null,
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-07T11:39:49.720Z",
+      "dueAt": "2026-10-07T17:36:00.000Z",
+      "localSlot": "Wed-13",
+      "repos": [],
+      "sourceUrls": [
+        "https://techcrunch.com/2026/10/06/anthropic-gives-startups-a-free-year-of-enterprise-service-and-1000-in-token-credits/"
+      ],
+      "charCount": 249,
+      "qualityScore": 46,
+      "metrics": null,
+      "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ac62fabb6193f6b1778263c",
+      "type": "question",
+      "slot": "afternoon",
+      "slotDay": "2026-10-07",
+      "text": "an audit log isn't evidence if the agent can edit it.\na dev.to post makes that case.\nmy lean: give the agent its own postgres role, INSERT-only on the log table.\nwhere do you keep agent logs so the agent can't rewrite them?",
+      "angle": "news-question",
+      "topic": "Django settings and deployment",
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-07T11:40:27.833Z",
+      "dueAt": "2026-10-07T20:02:00.000Z",
+      "localSlot": "Wed-16",
+      "repos": [],
+      "sourceUrls": [
+        "https://dev.to/james_anderson_h/the-witness-was-the-suspect-why-ai-audit-logs-cant-be-trusted-2190"
+      ],
+      "charCount": 223,
+      "qualityScore": 44,
+      "metrics": null,
+      "metricsUpdatedAt": null
     }
   ]
 }
