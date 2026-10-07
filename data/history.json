@@ -1193,6 +1193,26 @@
       "qualityScore": 44,
       "metrics": null,
       "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ac668a3e94c2c45e00791a0",
+      "type": "observation",
+      "slot": "evening",
+      "slotDay": "2026-10-07",
+      "text": "coursework hands you a spec and an autograder.\na side project hands you neither.\nthe hardest skill isn't writing the code, it's deciding what \"done\" means before you start.",
+      "angle": "student-builder",
+      "topic": null,
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-07T15:43:31.189Z",
+      "dueAt": "2026-10-07T23:17:00.000Z",
+      "localSlot": "Wed-19",
+      "repos": [],
+      "sourceUrls": [],
+      "charCount": 172,
+      "qualityScore": 36,
+      "metrics": null,
+      "metricsUpdatedAt": null
     }
   ]
 }
