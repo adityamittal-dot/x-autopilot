@@ -1263,6 +1263,96 @@
       "qualityScore": 36,
       "metrics": null,
       "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ac78445e63932e2c59e4b41",
+      "type": "tip",
+      "slot": "morning",
+      "slotDay": "2026-10-08",
+      "text": "two cron workers, one job, no redis.\n\n`SELECT pg_try_advisory_xact_lock(42)` returns false if another transaction already holds it. it doesn't wait.\n\nthe lock drops on commit or rollback, so a crashed worker can't leave it stuck.",
+      "angle": "small-trick",
+      "topic": "PostgreSQL transactions and locks",
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-08T11:53:42.091Z",
+      "dueAt": "2026-10-08T12:36:00.000Z",
+      "localSlot": "Thu-08",
+      "repos": [],
+      "sourceUrls": [],
+      "charCount": 229,
+      "qualityScore": 42,
+      "metrics": null,
+      "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ac7847208d405a9e7fd3921",
+      "type": "bip",
+      "slot": "late-morning",
+      "slotDay": "2026-10-08",
+      "text": "viewers will QA your AI narration for you.\n\nlorevid's videos said Luffy as LUH-fee. the comments on 10-07 corrected it: LOO-fee.\n\nfixed the pronunciation. for anime and lore channels, one wrong name tells viewers you don't know the source.",
+      "angle": "problem-solved",
+      "topic": null,
+      "commits": [
+        "pronounce: Luffy is LOO-fee, not LUH-fee (viewer complaints 10-07)"
+      ],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-08T11:54:26.496Z",
+      "dueAt": "2026-10-08T15:00:00.000Z",
+      "localSlot": "Thu-11",
+      "repos": [
+        "adityamittal-dot/llm-gateway",
+        "adityamittal-dot/lorevid",
+        "adityamittal-dot/XOR"
+      ],
+      "sourceUrls": [],
+      "charCount": 239,
+      "qualityScore": 34,
+      "metrics": null,
+      "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ac78493daf7bb7cba1d5716",
+      "type": "insight",
+      "slot": "midday",
+      "slotDay": "2026-10-08",
+      "text": "if your agent can send email, it will eventually send the wrong one.\n\na dev.to writeup on an agent wired to send real emails had me listing guardrails:\n- drafts only until a human approves\n- a per-run send cap\n- log the action before it fires, not after",
+      "angle": "worth-saving",
+      "topic": null,
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-08T11:54:59.741Z",
+      "dueAt": "2026-10-08T17:32:00.000Z",
+      "localSlot": "Thu-13",
+      "repos": [],
+      "sourceUrls": [
+        "https://dev.to/james_anderson_h/your-ai-agent-will-do-something-terrible-heres-how-to-survive-it-4lc8"
+      ],
+      "charCount": 253,
+      "qualityScore": 34,
+      "metrics": null,
+      "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ac784b7daf7bb7cba1d5f7a",
+      "type": "question",
+      "slot": "afternoon",
+      "slotDay": "2026-10-08",
+      "text": "someone on dev.to let their AI agents merge to production. once.\nas a student i'd keep a human on every merge until my tests are worth trusting.\nwhat was the first step you let an agent ship without review?",
+      "angle": "student-question",
+      "topic": "Django ORM and querysets",
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-08T11:55:35.692Z",
+      "dueAt": "2026-10-08T20:09:00.000Z",
+      "localSlot": "Thu-16",
+      "repos": [],
+      "sourceUrls": [
+        "https://dev.to/infoinlet1/i-let-my-ai-agents-merge-to-production-once-35ji"
+      ],
+      "charCount": 206,
+      "qualityScore": 44,
+      "metrics": null,
+      "metricsUpdatedAt": null
     }
   ]
 }
