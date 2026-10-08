@@ -1353,6 +1353,26 @@
       "qualityScore": 44,
       "metrics": null,
       "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ac7bb6d444a36d3be29793f",
+      "type": "observation",
+      "slot": "evening",
+      "slotDay": "2026-10-08",
+      "text": "if you can't describe a PR in one sentence, it's two PRs.\nthe reviewer can't hold both ideas at once either, so one of them gets rubber-stamped.",
+      "angle": "hot-take",
+      "topic": null,
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-08T15:49:01.993Z",
+      "dueAt": "2026-10-08T23:17:00.000Z",
+      "localSlot": "Thu-19",
+      "repos": [],
+      "sourceUrls": [],
+      "charCount": 144,
+      "qualityScore": 36,
+      "metrics": null,
+      "metricsUpdatedAt": null
     }
   ]
 }
