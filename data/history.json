@@ -1623,6 +1623,46 @@
       "qualityScore": 36,
       "metrics": null,
       "metricsUpdatedAt": null
+    },
+    {
+      "id": "6aca1b81bba9419ccbfc93e6",
+      "type": "tip",
+      "slot": "wk-morning",
+      "slotDay": "2026-10-10",
+      "text": "rebase doesn't move your commits. it writes new ones.\na commit's hash includes its parent's hash, so a new base means new hashes all the way up the branch.\nthat's why rebasing something a teammate already pulled leaves them with duplicate commits.",
+      "angle": "mental-model",
+      "topic": "Git workflows",
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-10T11:03:29.612Z",
+      "dueAt": "2026-10-10T14:06:00.000Z",
+      "localSlot": "Sat-10",
+      "repos": [],
+      "sourceUrls": [],
+      "charCount": 247,
+      "qualityScore": 28,
+      "metrics": null,
+      "metricsUpdatedAt": null
+    },
+    {
+      "id": "6aca1b95f91f772d458e95d9",
+      "type": "observation",
+      "slot": "wk-midday",
+      "slotDay": "2026-10-10",
+      "text": "school assignments start from an empty file.\nalmost every real task starts inside code someone else wrote, with no spec and comments that are out of date.\nreading code is the skill nobody grades.",
+      "angle": "student-builder",
+      "topic": null,
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-10T11:03:49.707Z",
+      "dueAt": "2026-10-10T17:30:00.000Z",
+      "localSlot": "Sat-13",
+      "repos": [],
+      "sourceUrls": [],
+      "charCount": 195,
+      "qualityScore": 36,
+      "metrics": null,
+      "metricsUpdatedAt": null
     }
   ]
 }
