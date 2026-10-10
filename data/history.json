@@ -1663,6 +1663,28 @@
       "qualityScore": 36,
       "metrics": null,
       "metricsUpdatedAt": null
+    },
+    {
+      "id": "6aca4e16d9cab260a7c9241c",
+      "type": "question",
+      "slot": "wk-evening",
+      "slotDay": "2026-10-10",
+      "text": "in a dev.to test, 6 of 10 agents ignored hidden boundaries.\nmy lean: an agent that queries postgres gets a read-only role with statement_timeout set. one missing index shouldn't let it seq-scan prod for minutes.\nwhat limits do you put on agent sql?",
+      "angle": "news-question",
+      "topic": "PostgreSQL indexes and queries",
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-10T14:39:18.615Z",
+      "dueAt": "2026-10-10T21:14:00.000Z",
+      "localSlot": "Sat-17",
+      "repos": [],
+      "sourceUrls": [
+        "https://dev.to/t-rexbytes/does-your-llm-know-the-boundary-i-left-the-doors-open-and-6-of-10-ai-agents-crowned-themselves-4o42"
+      ],
+      "charCount": 248,
+      "qualityScore": 50,
+      "metrics": null,
+      "metricsUpdatedAt": null
     }
   ]
 }
