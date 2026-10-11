@@ -1765,6 +1765,28 @@
       "qualityScore": 31,
       "metrics": null,
       "metricsUpdatedAt": null
+    },
+    {
+      "id": "6acba519b07d37ac97adef33",
+      "type": "question",
+      "slot": "wk-evening",
+      "slotDay": "2026-10-11",
+      "text": "a dev.to post: a coding agent survived two 230k-token context compactions mid-ticket by keeping init.d-style state files.\nmy lean: an agent's progress belongs in the repo, not its context.\ndo you let the agent write that file, or keep it yourself?",
+      "angle": "student-question",
+      "topic": "Python typing and dataclasses",
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-11T15:02:49.616Z",
+      "dueAt": "2026-10-11T21:00:00.000Z",
+      "localSlot": "Sun-17",
+      "repos": [],
+      "sourceUrls": [
+        "https://dev.to/gde/surviving-the-200k-token-lobotomy-how-unix-initd-and-memento-made-my-ai-coding-agent-immune-to-2f74"
+      ],
+      "charCount": 247,
+      "qualityScore": 50,
+      "metrics": null,
+      "metricsUpdatedAt": null
     }
   ]
 }
