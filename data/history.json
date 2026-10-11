@@ -1725,6 +1725,46 @@
       "status": "sent",
       "sentAt": "2026-10-10T21:14:00.786Z",
       "url": "https://x.com/1687093333124845568/status/2109029706720845857"
+    },
+    {
+      "id": "6acb70f0d9cab260a7f5f1a7",
+      "type": "tip",
+      "slot": "wk-morning",
+      "slotDay": "2026-10-11",
+      "text": "stop fetching your own /api routes from server components.\n\na server component can call the db or the function directly.\n\nfetching /api adds an http hop to your own server, and at build time there's no server running to answer it.",
+      "angle": "do-this-not-that",
+      "topic": "Next.js App Router",
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-11T11:20:16.714Z",
+      "dueAt": "2026-10-11T14:15:00.000Z",
+      "localSlot": "Sun-10",
+      "repos": [],
+      "sourceUrls": [],
+      "charCount": 230,
+      "qualityScore": 40,
+      "metrics": null,
+      "metricsUpdatedAt": null
+    },
+    {
+      "id": "6acb710fb07d37ac97a4278c",
+      "type": "observation",
+      "slot": "wk-midday",
+      "slotDay": "2026-10-11",
+      "text": "coding agents rarely reuse your helpers. they write a fresh one next to the old one.\na few weeks later the repo has three date formatters and they don't agree on timezones.",
+      "angle": "ai-coding-reality",
+      "topic": null,
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-11T11:20:47.756Z",
+      "dueAt": "2026-10-11T17:46:00.000Z",
+      "localSlot": "Sun-13",
+      "repos": [],
+      "sourceUrls": [],
+      "charCount": 172,
+      "qualityScore": 31,
+      "metrics": null,
+      "metricsUpdatedAt": null
     }
   ]
 }
