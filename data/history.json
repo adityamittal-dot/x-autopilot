@@ -1990,6 +1990,26 @@
       "qualityScore": 45,
       "metrics": null,
       "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ace5a1e0b1619ab6567830b",
+      "type": "observation",
+      "slot": "evening",
+      "slotDay": "2026-10-13",
+      "text": "the deploy you're nervous about goes fine.\nthe one that takes prod down is the one where you only changed an env var.",
+      "angle": "dev-life",
+      "topic": null,
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-13T16:19:42.445Z",
+      "dueAt": "2026-10-13T23:09:00.000Z",
+      "localSlot": "Tue-19",
+      "repos": [],
+      "sourceUrls": [],
+      "charCount": 117,
+      "qualityScore": 40,
+      "metrics": null,
+      "metricsUpdatedAt": null
     }
   ]
 }
