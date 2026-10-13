@@ -1899,6 +1899,97 @@
       "qualityScore": 48,
       "metrics": null,
       "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ace2531fb038763666b8e3c",
+      "type": "tip",
+      "slot": "morning",
+      "slotDay": "2026-10-13",
+      "text": "`.rstrip(\".py\")` doesn't remove a suffix. it removes characters.\n\n`\"happy.py\".rstrip(\".py\")` returns \"ha\".\n\nstrip treats its argument as a set of chars, not a string. use `.removesuffix(\".py\")` when you mean the suffix.",
+      "angle": "gotcha",
+      "topic": "Python standard library",
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-13T12:33:53.260Z",
+      "dueAt": "2026-10-13T12:43:00.000Z",
+      "localSlot": "Tue-08",
+      "repos": [],
+      "sourceUrls": [],
+      "charCount": 219,
+      "qualityScore": 36,
+      "metrics": null,
+      "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ace2556d8537df3c5554e4c",
+      "type": "bip",
+      "slot": "late-morning",
+      "slotDay": "2026-10-13",
+      "text": "when one day produces several builds, the tagging scheme starts to matter.\n\nlorevid does date + suffix: L, L2, L2s1, Ls1. it shipped like that two days running.\n\nwhat do you use to tag same-day releases?",
+      "angle": "tried-result",
+      "topic": null,
+      "commits": [
+        "release 2026-10-14-L 2026-10-14-L2 2026-10-14-L2s1 2026-10-14-Ls1",
+        "published 2026-10-14-Ls1"
+      ],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-13T12:34:30.558Z",
+      "dueAt": "2026-10-13T15:02:00.000Z",
+      "localSlot": "Tue-11",
+      "repos": [
+        "adityamittal-dot/lorevid",
+        "adityamittal-dot/pacemark",
+        "adityamittal-dot/llm-gateway"
+      ],
+      "sourceUrls": [],
+      "charCount": 203,
+      "qualityScore": 35,
+      "metrics": null,
+      "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ace25765a7a45d7e2b6d441",
+      "type": "insight",
+      "slot": "midday",
+      "slotDay": "2026-10-13",
+      "text": "a benchmark that can't leak still isn't measuring what i need.\n\nSWE-Duel makes tasks at eval time so they can't leak into training, and agents set the difficulty.\n\nthat fixes contamination. it doesn't tell me the agent built what i meant.",
+      "angle": "contrarian",
+      "topic": null,
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-13T12:35:02.362Z",
+      "dueAt": "2026-10-13T17:50:00.000Z",
+      "localSlot": "Tue-13",
+      "repos": [],
+      "sourceUrls": [
+        "https://huggingface.co/papers/2610.12569"
+      ],
+      "charCount": 238,
+      "qualityScore": 40,
+      "metrics": null,
+      "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ace25935a7a45d7e2b6d8d3",
+      "type": "question",
+      "slot": "afternoon",
+      "slotDay": "2026-10-13",
+      "text": "character.ai filed for bankruptcy and is selling assets to disney for $20M, per techcrunch.\n\nmy lean: if you can't say what one chat costs you in inference, you can't price it.\n\ndo you track cost per request, or only watch the monthly bill?",
+      "angle": "news-question",
+      "topic": "debugging and profiling",
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-13T12:35:31.673Z",
+      "dueAt": "2026-10-13T20:16:00.000Z",
+      "localSlot": "Tue-16",
+      "repos": [],
+      "sourceUrls": [
+        "https://techcrunch.com/2026/10/13/just-5-years-in-interactive-chatbot-platform-character-ai-files-for-bankruptcy/"
+      ],
+      "charCount": 240,
+      "qualityScore": 45,
+      "metrics": null,
+      "metricsUpdatedAt": null
     }
   ]
 }
