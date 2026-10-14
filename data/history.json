@@ -2060,6 +2060,75 @@
       "qualityScore": 40,
       "metrics": null,
       "metricsUpdatedAt": null
+    },
+    {
+      "id": "6acf52cadd6faa9f508a096c",
+      "type": "tip",
+      "slot": "morning",
+      "slotDay": "2026-10-14",
+      "text": "an effect doesn't see current state. it sees the render that created it.\n\nevery render gets its own props, state and closures.\n\nthat's why a setInterval with `[]` deps keeps reading the first `count` forever.",
+      "angle": "mental-model",
+      "topic": "React state and effects",
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-14T10:00:42.351Z",
+      "dueAt": "2026-10-14T12:45:00.000Z",
+      "localSlot": "Wed-08",
+      "repos": [],
+      "sourceUrls": [],
+      "charCount": 208,
+      "qualityScore": 43,
+      "metrics": null,
+      "metricsUpdatedAt": null
+    },
+    {
+      "id": "6acf52ea4c17f84537340b8c",
+      "type": "bip",
+      "slot": "late-morning",
+      "slotDay": "2026-10-14",
+      "text": "vidforge targets 2.5-3 hour videos, 2 a day.\n\nfor sleep history, length is the product. the first script draft came out at 13,176 words over 21 chapters.\n\nthe catch: nobody hand-checks every script at that length. the pipeline has to be right.",
+      "angle": "decision",
+      "topic": null,
+      "commits": [
+        "Configure vidforge for Late Night History TV: 2.5-3 h sleep history videos, 2 a day",
+        "Save first full script draft and competitor research data"
+      ],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-14T10:01:14.429Z",
+      "dueAt": "2026-10-14T15:18:00.000Z",
+      "localSlot": "Wed-11",
+      "repos": [
+        "adityamittal-dot/lorevid",
+        "adityamittal-dot/vidforge",
+        "adityamittal-dot/pacemark"
+      ],
+      "sourceUrls": [],
+      "charCount": 243,
+      "qualityScore": 34,
+      "metrics": null,
+      "metricsUpdatedAt": null
+    },
+    {
+      "id": "6acf5312033d64cf5cee2015",
+      "type": "insight",
+      "slot": "midday",
+      "slotDay": "2026-10-14",
+      "text": "more code from agents isn't more software, per ars technica.\n\nwhat i'd track instead of lines generated:\n- features users actually touched\n- PRs merged vs PRs closed unmerged\n- time from first diff to deploy",
+      "angle": "worth-saving",
+      "topic": null,
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-14T10:01:54.343Z",
+      "dueAt": "2026-10-14T17:45:00.000Z",
+      "localSlot": "Wed-13",
+      "repos": [],
+      "sourceUrls": [
+        "https://arstechnica.com/ai/2026/10/ai-coding-agents-generate-more-code-but-not-more-software/"
+      ],
+      "charCount": 207,
+      "qualityScore": 38,
+      "metrics": null,
+      "metricsUpdatedAt": null
     }
   ]
 }
