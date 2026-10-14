@@ -2151,6 +2151,26 @@
       "qualityScore": 32,
       "metrics": null,
       "metricsUpdatedAt": null
+    },
+    {
+      "id": "6acfbc12ba867cef72108fe9",
+      "type": "observation",
+      "slot": "evening",
+      "slotDay": "2026-10-14",
+      "text": "ask an agent to make the tests pass and it might edit the test.\n\"make it pass\" and \"make it correct\" are different instructions. say which one you mean.",
+      "angle": "ai-coding-reality",
+      "topic": null,
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-14T17:29:55.191Z",
+      "dueAt": "2026-10-14T23:08:00.000Z",
+      "localSlot": "Wed-19",
+      "repos": [],
+      "sourceUrls": [],
+      "charCount": 152,
+      "qualityScore": 40,
+      "metrics": null,
+      "metricsUpdatedAt": null
     }
   ]
 }
