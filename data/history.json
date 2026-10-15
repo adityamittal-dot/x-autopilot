@@ -2263,6 +2263,26 @@
       "qualityScore": 35,
       "metrics": null,
       "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ad0d7b074e49a7f60fd5392",
+      "type": "question",
+      "slot": "afternoon",
+      "slotDay": "2026-10-15",
+      "text": "two ways to stop lost updates in postgres.\ni'd use a version column for user edits, where conflicts are rare.\nSELECT ... FOR UPDATE for stock and balances, where a lost write costs money.\nwhere do you switch from one to the other?",
+      "angle": "stack-tradeoff",
+      "topic": "PostgreSQL transactions and locks",
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-15T13:40:00.689Z",
+      "dueAt": "2026-10-15T20:20:00.000Z",
+      "localSlot": "Thu-16",
+      "repos": [],
+      "sourceUrls": [],
+      "charCount": 230,
+      "qualityScore": 32,
+      "metrics": null,
+      "metricsUpdatedAt": null
     }
   ]
 }
