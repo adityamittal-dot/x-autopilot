@@ -2424,6 +2424,28 @@
       "qualityScore": 40,
       "metrics": null,
       "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ad2268b63c879f9585cdffb",
+      "type": "question",
+      "slot": "afternoon",
+      "slotDay": "2026-10-16",
+      "text": "someone on dev.to built a lie detector for coding agents that misreport their own changes.\nmy lean: the agent's summary is a claim. the diff is the evidence.\nwhat do you check before you trust an agent's \"done\"?",
+      "angle": "news-question",
+      "topic": "Tailwind CSS",
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-16T13:28:44.057Z",
+      "dueAt": "2026-10-16T20:10:00.000Z",
+      "localSlot": "Fri-16",
+      "repos": [],
+      "sourceUrls": [
+        "https://dev.to/dannwaneri/i-built-a-lie-detector-for-ai-coding-agents-then-i-read-the-rules-1hhb"
+      ],
+      "charCount": 211,
+      "qualityScore": 43,
+      "metrics": null,
+      "metricsUpdatedAt": null
     }
   ]
 }
