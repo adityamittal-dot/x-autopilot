@@ -2556,6 +2556,26 @@
       "qualityScore": 40,
       "metrics": null,
       "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ad3682c769b45793477c2ba",
+      "type": "question",
+      "slot": "wk-evening",
+      "slotDay": "2026-10-17",
+      "text": "a student repo with one commit called \"final\" hides how you built it.\nmy lean: small commits with real messages are part of the portfolio.\nif you hire or review juniors, do you ever open the commit history?",
+      "angle": "student-question",
+      "topic": "Git workflows",
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-17T12:21:00.513Z",
+      "dueAt": "2026-10-17T21:05:00.000Z",
+      "localSlot": "Sat-17",
+      "repos": [],
+      "sourceUrls": [],
+      "charCount": 206,
+      "qualityScore": 40,
+      "metrics": null,
+      "metricsUpdatedAt": null
     }
   ]
 }
