@@ -2616,6 +2616,46 @@
       "qualityScore": 40,
       "metrics": null,
       "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ad490830a208cb3235ad6e3",
+      "type": "tip",
+      "slot": "wk-morning",
+      "slotDay": "2026-10-18",
+      "text": "`LIKE 'abc%'` can ignore your btree index.\n\nunless the db uses the C collation, a plain btree can't serve prefix matches. build it with `text_pattern_ops`.\n\nfor `'%abc%'` no btree helps. that's a pg_trgm GIN index.",
+      "angle": "gotcha",
+      "topic": "PostgreSQL indexes and queries",
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-18T09:25:23.931Z",
+      "dueAt": "2026-10-18T14:14:00.000Z",
+      "localSlot": "Sun-10",
+      "repos": [],
+      "sourceUrls": [],
+      "charCount": 214,
+      "qualityScore": 48,
+      "metrics": null,
+      "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ad490930b0d72757a15f9aa",
+      "type": "observation",
+      "slot": "wk-midday",
+      "slotDay": "2026-10-18",
+      "text": "assignments come with a spec and an autograder.\nside projects come with neither. you write the spec, and nothing tells you when it's done.\ndeciding \"done\" is the skill coursework never practiced.",
+      "angle": "student-builder",
+      "topic": null,
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-18T09:25:39.661Z",
+      "dueAt": "2026-10-18T17:34:00.000Z",
+      "localSlot": "Sun-13",
+      "repos": [],
+      "sourceUrls": [],
+      "charCount": 195,
+      "qualityScore": 36,
+      "metrics": null,
+      "metricsUpdatedAt": null
     }
   ]
 }
