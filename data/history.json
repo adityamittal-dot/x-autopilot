@@ -2656,6 +2656,26 @@
       "qualityScore": 36,
       "metrics": null,
       "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ad4bf83938409f1d0ce765d",
+      "type": "question",
+      "slot": "wk-evening",
+      "slotDay": "2026-10-18",
+      "text": "server actions for my own forms, route handlers for anything a second client calls.\nan action is wired to the next app. a mobile app or a stripe webhook needs a real endpoint.\nwhere do you stop using server actions?",
+      "angle": "stack-tradeoff",
+      "topic": "Next.js App Router",
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-18T12:45:55.555Z",
+      "dueAt": "2026-10-18T21:04:00.000Z",
+      "localSlot": "Sun-17",
+      "repos": [],
+      "sourceUrls": [],
+      "charCount": 215,
+      "qualityScore": 39,
+      "metrics": null,
+      "metricsUpdatedAt": null
     }
   ]
 }
