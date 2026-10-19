@@ -2706,6 +2706,73 @@
       "qualityScore": 39,
       "metrics": null,
       "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ad5f31b61ffad979f0a5d25",
+      "type": "tip",
+      "slot": "morning",
+      "slotDay": "2026-10-19",
+      "text": "a plain `@dataclass` can't go in a set.\n\n`eq=True` is the default. without `frozen=True`, that sets `__hash__` to None. equal objects must hash equal, and a mutable one could change its hash after you insert it.\n\nwant it hashable? use `frozen=True`.",
+      "angle": "mental-model",
+      "topic": "Python typing and dataclasses",
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-19T10:38:19.996Z",
+      "dueAt": "2026-10-19T12:34:00.000Z",
+      "localSlot": "Mon-08",
+      "repos": [],
+      "sourceUrls": [],
+      "charCount": 249,
+      "qualityScore": 28,
+      "metrics": null,
+      "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ad5f33761ffad979f0a611f",
+      "type": "bip",
+      "slot": "late-morning",
+      "slotDay": "2026-10-19",
+      "text": "a numbered series needs links both ways, but part 2 doesn't exist when part 1 goes up.\n\nvidforge lists earlier parts in each new description, then edits the previous part to add a Next link.\n\npublish forward, link backward after.",
+      "angle": "problem-solved",
+      "topic": null,
+      "commits": [
+        "Link numbered series parts: earlier parts in the description, Next link added to the previous part"
+      ],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-19T10:38:47.954Z",
+      "dueAt": "2026-10-19T15:07:00.000Z",
+      "localSlot": "Mon-11",
+      "repos": [
+        "adityamittal-dot/lorevid",
+        "adityamittal-dot/vidforge"
+      ],
+      "sourceUrls": [],
+      "charCount": 229,
+      "qualityScore": 29,
+      "metrics": null,
+      "metricsUpdatedAt": null
+    },
+    {
+      "id": "6ad5f359b9948a7ec0663f9d",
+      "type": "insight",
+      "slot": "midday",
+      "slotDay": "2026-10-19",
+      "text": "a $1.40 training run doesn't make owning a model cheap.\n\nthe dev.to post trained a 97.5M python coding model from scratch on $1.40 of gpu time.\n\nthe gpu was the cheap line item. the data, the evals, and keeping it useful aren't.",
+      "angle": "contrarian",
+      "topic": null,
+      "commits": [],
+      "model": "claude-opus-5-5",
+      "createdAt": "2026-10-19T10:39:21.172Z",
+      "dueAt": "2026-10-19T17:44:00.000Z",
+      "localSlot": "Mon-13",
+      "repos": [],
+      "sourceUrls": [
+        "https://dev.to/tmgbedu/training-a-975m-python-coding-model-from-scratch-for-140-in-gpu-time-4lp4"
+      ],
+      "charCount": 228,
+      "qualityScore": 50,
+      "metrics": null,
+      "metricsUpdatedAt": null
     }
   ]
 }
